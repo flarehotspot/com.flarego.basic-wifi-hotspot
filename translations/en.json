@@ -1,4 +1,6 @@
 {
-  "labels": {},
+  "labels": {
+    "insert_coin": "Insert Coin"
+  },
   "errors": {}
 }

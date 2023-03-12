@@ -8,6 +8,7 @@ import (
 	"github.com/flarehotspot/sdk/api/payments"
 	"github.com/flarehotspot/sdk/api/plugin"
 	"github.com/flarehotspot/sdk/api/web/contexts"
+	"github.com/flarehotspot/wifi-hotspot/app/routes/names"
 )
 
 type PortalCtrl struct {
@@ -25,8 +26,8 @@ func (ctrl *PortalCtrl) GetInsertCoin(w http.ResponseWriter, r *http.Request) {
 	}
 
 	params := &payments.PurchaseParams{
-		Items:         []*payments.PurchaseItem{item},
-		ReturnRoute:   "payment:received",
+		Items:       []*payments.PurchaseItem{item},
+		ReturnRoute: names.RoutePaymentReceived,
 	}
 
 	ctrl.api.HttpApi().Respond().RequestPayment(w, r, params)
