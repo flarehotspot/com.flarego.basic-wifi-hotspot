@@ -1,3 +1,4 @@
+# prod: export CGO_ENABLED=0
 
-prod:
-	go build -buildmode=plugin -o plugin.so -tags=prod ./main.go
+plugin:
+	go build -buildmode=plugin -o plugin.so ./main.go
