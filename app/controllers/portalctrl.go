@@ -2,7 +2,7 @@ package controllers
 
 import (
 	curr "github.com/flarehotspot/sdk/api/currencies"
-	"github.com/flarehotspot/sdk/api/models"
+	"github.com/flarehotspot/sdk/api/models/device"
 	pymnt "github.com/flarehotspot/sdk/api/payments"
 	"github.com/flarehotspot/sdk/api/plugin"
 	"github.com/flarehotspot/sdk/api/web/contexts"
@@ -16,7 +16,7 @@ type PortalCtrl struct {
 }
 
 func (ctrl *PortalCtrl) GetInsertCoin(w http.ResponseWriter, r *http.Request) {
-	device := r.Context().Value(contexts.DeviceCtxKey).(models.IDeviceInstance)
+	device := r.Context().Value(contexts.DeviceCtxKey).(device.IDeviceInstance)
 	log.Println("Insert coin device mac: ", device.MacAddress())
 
 	item := &pymnt.PaymentRequestItem{
