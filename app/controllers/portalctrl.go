@@ -16,25 +16,29 @@ type PortalCtrl struct {
 }
 
 func (ctrl *PortalCtrl) GetInsertCoin(w http.ResponseWriter, r *http.Request) {
-	device := r.Context().Value(contexts.DeviceCtxKey).(device.IDeviceInstance)
-	log.Println("Insert coin device mac: ", device.MacAddress())
+	device, ok := r.Context().Value(contexts.DeviceCtxKey).(device.IDeviceInstance)
+	if ok && device != nil {
+		log.Println("Insert coin device mac: ", device.MacAddress())
 
-	item := &pymnt.PaymentRequestItem{
-		Sku:         "some-sku",
-		Name:        "Wifi Connection",
-		Description: "Purchase for wifi connection",
-		UnitAmount: &pymnt.UnitAmount{
-			CurrencyCode: curr.CurrencyPhilippinePeso,
-			Value:        11.0,
-		},
+		item := &pymnt.PaymentRequestItem{
+			Sku:         "some-sku",
+			Name:        "Wifi Connection",
+			Description: "Purchase for wifi connection",
+			UnitAmount: &pymnt.UnitAmount{
+				CurrencyCode: curr.CurrencyPhilippinePeso,
+				Value:        11.0,
+			},
+		}
+
+		params := &pymnt.PaymentRequestParams{
+			Items:       []*pymnt.PaymentRequestItem{item},
+			ReturnRoute: names.RoutePaymentReceived,
+		}
+
+		ctrl.api.HttpApi().Respond().RequestPayment(w, r, params)
+	} else {
+		w.WriteHeader(http.StatusInternalServerError)
 	}
-
-	params := &pymnt.PaymentRequestParams{
-		Items:       []*pymnt.PaymentRequestItem{item},
-		ReturnRoute: names.RoutePaymentReceived,
-	}
-
-	ctrl.api.HttpApi().Respond().RequestPayment(w, r, params)
 }
 
 func NewPortalCtrl(api plugin.IPluginApi) *PortalCtrl {

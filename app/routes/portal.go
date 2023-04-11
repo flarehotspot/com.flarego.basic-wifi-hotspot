@@ -12,8 +12,10 @@ import (
 func SetupRoutes(api plugin.IPluginApi) {
 	rtr := api.HttpApi().Router()
 	portalCtrl := controllers.NewPortalCtrl(api)
+  deviceMw := api.HttpApi().Middlewares().Device()
 
 	rtr.PluginRouter().Group("/portal", func(subrouter router.IRouter) {
+    subrouter.Use(deviceMw)
 		subrouter.Get("/insert-coin", portalCtrl.GetInsertCoin).Name(names.RouteInsertCoin)
 		subrouter.Get("/payment/received", func(w http.ResponseWriter, r *http.Request) {
 			w.Write([]byte("Payment received!"))
