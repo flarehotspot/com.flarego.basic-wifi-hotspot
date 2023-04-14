@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/flarehotspot/sdk/api/plugin"
@@ -12,13 +13,21 @@ import (
 func SetupRoutes(api plugin.IPluginApi) {
 	rtr := api.HttpApi().Router()
 	portalCtrl := controllers.NewPortalCtrl(api)
-  deviceMw := api.HttpApi().Middlewares().Device()
+	deviceMw := api.HttpApi().Middlewares().Device()
 
 	rtr.PluginRouter().Group("/portal", func(subrouter router.IRouter) {
-    subrouter.Use(deviceMw)
+		subrouter.Use(deviceMw)
 		subrouter.Get("/insert-coin", portalCtrl.GetInsertCoin).Name(names.RouteInsertCoin)
-		subrouter.Get("/payment/received", func(w http.ResponseWriter, r *http.Request) {
-			w.Write([]byte("Payment received!"))
+	})
+
+	rtr.PluginRouter().Group("/payments", func(subrouter router.IRouter) {
+		subrouter.Get("/received", func(w http.ResponseWriter, r *http.Request) {
+			evt, err := api.PaymentsApi().ParsePaymentEvent(r)
+			if err != nil {
+				log.Println(err)
+			}
+			log.Printf("Payment Received: \n%+v", evt)
+			w.WriteHeader(http.StatusOK)
 		}).Name(names.RoutePaymentReceived)
 	})
 }

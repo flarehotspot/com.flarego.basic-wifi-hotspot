@@ -20,7 +20,7 @@ func (ctrl *PortalCtrl) GetInsertCoin(w http.ResponseWriter, r *http.Request) {
 	if ok && device != nil {
 		log.Println("Insert coin device mac: ", device.MacAddress())
 
-		item := &payments.PaymentRequestItem{
+		item := &payments.PurchaseItem{
 			Sku:         "some-sku",
 			Name:        "Wifi Connection",
 			Description: "Purchase for wifi connection",
@@ -30,12 +30,12 @@ func (ctrl *PortalCtrl) GetInsertCoin(w http.ResponseWriter, r *http.Request) {
 			},
 		}
 
-		params := &payments.PaymentRequestParams{
-			Items:       []*payments.PaymentRequestItem{item},
+		params := &payments.PurchaseRequest{
+			Items:       []*payments.PurchaseItem{item},
 			CallbackUrl: ctrl.api.HttpApi().Router().UrlForRoute(names.RoutePaymentReceived),
 		}
 
-		ctrl.api.PaymentsApi().RequestPayment(w, r, params)
+		ctrl.api.PaymentsApi().Request(w, r, params)
 	} else {
 		w.WriteHeader(http.StatusInternalServerError)
 	}
