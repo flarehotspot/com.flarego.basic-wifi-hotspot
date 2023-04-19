@@ -1,8 +1,7 @@
 package controllers
 
 import (
-	"github.com/flarehotspot/sdk/api/currencies"
-	"github.com/flarehotspot/sdk/api/models/device"
+	"github.com/flarehotspot/sdk/api/db/models"
 	"github.com/flarehotspot/sdk/api/payments"
 	"github.com/flarehotspot/sdk/api/plugin"
 	"github.com/flarehotspot/sdk/api/web/contexts"
@@ -16,7 +15,7 @@ type PortalCtrl struct {
 }
 
 func (ctrl *PortalCtrl) GetInsertCoin(w http.ResponseWriter, r *http.Request) {
-	device, ok := r.Context().Value(contexts.DeviceCtxKey).(device.IDeviceInstance)
+	device, ok := r.Context().Value(contexts.DeviceCtxKey).(models.IDevice)
 	if ok && device != nil {
 		log.Println("Insert coin device mac: ", device.MacAddress())
 
@@ -24,10 +23,7 @@ func (ctrl *PortalCtrl) GetInsertCoin(w http.ResponseWriter, r *http.Request) {
 			Sku:         "some-sku",
 			Name:        "Wifi Connection",
 			Description: "Purchase for wifi connection",
-			UnitAmount: &payments.UnitAmount{
-				CurrencyCode:   currencies.CurrencyPhilippinePeso,
-				VariableAmount: true,
-			},
+			Price:       11.1,
 		}
 
 		params := &payments.PurchaseRequest{
@@ -35,7 +31,7 @@ func (ctrl *PortalCtrl) GetInsertCoin(w http.ResponseWriter, r *http.Request) {
 			CallbackUrl: ctrl.api.HttpApi().Router().UrlForRoute(names.RoutePaymentReceived),
 		}
 
-		ctrl.api.PaymentsApi().Request(w, r, params)
+		ctrl.api.PaymentsApi().Checkout(w, r, params)
 	} else {
 		w.WriteHeader(http.StatusInternalServerError)
 	}
