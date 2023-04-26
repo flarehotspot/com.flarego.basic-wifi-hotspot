@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"github.com/flarehotspot/sdk/api/db/models"
+	"github.com/flarehotspot/sdk/api/devices"
 	"github.com/flarehotspot/sdk/api/payments"
 	"github.com/flarehotspot/sdk/api/plugin"
 	"github.com/flarehotspot/sdk/api/web/contexts"
@@ -15,8 +15,9 @@ type PortalCtrl struct {
 }
 
 func (ctrl *PortalCtrl) GetInsertCoin(w http.ResponseWriter, r *http.Request) {
-	device, ok := r.Context().Value(contexts.DeviceCtxKey).(models.IDevice)
-	if ok && device != nil {
+	client, ok := r.Context().Value(contexts.ClientCtxKey).(devices.IClientDevice)
+	if ok && client != nil {
+		device := client.Device()
 		log.Println("Insert coin device mac: ", device.MacAddress())
 
 		item := &payments.PurchaseItem{

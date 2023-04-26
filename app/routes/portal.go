@@ -22,7 +22,7 @@ func SetupRoutes(api plugin.IPluginApi) {
 
 	rtr.PluginRouter().Group("/payments", func(subrouter router.IRouter) {
 		subrouter.Get("/received", func(w http.ResponseWriter, r *http.Request) {
-			paymt, err := api.PaymentsApi().ParsePaymentInfo(r)
+			paymt, err := api.PaymentsApi().ParsePurchase(r)
 			if err != nil {
 				log.Println(err)
 			}
