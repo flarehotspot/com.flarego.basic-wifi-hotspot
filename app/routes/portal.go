@@ -21,12 +21,15 @@ func SetupRoutes(api plugin.IPluginApi) {
 	})
 
 	rtr.PluginRouter().Group("/payments", func(subrouter router.IRouter) {
+    subrouter.Use(deviceMw)
 		subrouter.Get("/received", func(w http.ResponseWriter, r *http.Request) {
-			paymt, err := api.PaymentsApi().ParsePurchase(r)
+			paymt, err := api.PaymentsApi().ParsePaymentInfo(r)
 			if err != nil {
 				log.Println(err)
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+        return
 			}
-			log.Printf("Payment Received: \n%+v", paymt)
+			log.Printf("Payment Received: \n%+v", paymt.Purchase)
 			w.WriteHeader(http.StatusOK)
 		}).Name(names.RoutePaymentReceived)
 	})
