@@ -2,7 +2,7 @@ package navs
 
 import (
 	"github.com/flarehotspot/sdk/api/plugin"
-	"github.com/flarehotspot/sdk/api/web/navigation/navgen"
+	"github.com/flarehotspot/sdk/api/http/navigation/navgen"
 	"github.com/flarehotspot/wifi-hotspot/app/routes/names"
 )
 
