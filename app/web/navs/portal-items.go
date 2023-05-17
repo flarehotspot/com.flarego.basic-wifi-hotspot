@@ -7,6 +7,6 @@ import (
 )
 
 func SetPortalItems(api plugin.IPluginApi) {
-	portalItem := navgen.NewPortalItem(api, "insert_coin", names.RouteInsertCoin)
+	portalItem := navgen.NewPortalItem(api, "insert_coin", true, names.RouteInsertCoin)
 	api.NavApi().NewPortalNav(portalItem)
 }

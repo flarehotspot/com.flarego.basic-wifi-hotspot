@@ -29,6 +29,14 @@ func SetupRoutes(api plugin.IPluginApi) {
 				http.Error(w, err.Error(), http.StatusInternalServerError)
         return
 			}
+
+      err = paymt.Purchase.Confirm(r.Context())
+			if err != nil {
+				log.Println(err)
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+        return
+			}
+
 			log.Printf("Payment Received: \n%+v", paymt.Purchase)
 			w.WriteHeader(http.StatusOK)
 		}).Name(names.RoutePaymentReceived)
