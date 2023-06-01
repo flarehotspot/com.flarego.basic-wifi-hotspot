@@ -2,9 +2,9 @@ package controllers
 
 import (
 	"github.com/flarehotspot/sdk/api/connmgr"
+	"github.com/flarehotspot/sdk/api/http/contexts"
 	"github.com/flarehotspot/sdk/api/payments"
 	"github.com/flarehotspot/sdk/api/plugin"
-	"github.com/flarehotspot/sdk/api/http/contexts"
 	"github.com/flarehotspot/wifi-hotspot/app/routes/names"
 	"log"
 	"net/http"
@@ -12,6 +12,10 @@ import (
 
 type PortalCtrl struct {
 	api plugin.IPluginApi
+}
+
+func NewPortalCtrl(api plugin.IPluginApi) *PortalCtrl {
+	return &PortalCtrl{api}
 }
 
 func (ctrl *PortalCtrl) GetInsertCoin(w http.ResponseWriter, r *http.Request) {
@@ -39,6 +43,6 @@ func (ctrl *PortalCtrl) GetInsertCoin(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func NewPortalCtrl(api plugin.IPluginApi) *PortalCtrl {
-	return &PortalCtrl{api}
+func (ctrl *PortalCtrl) StartSession(w http.ResponseWriter, r *http.Request) {
+
 }

@@ -1,8 +1,8 @@
 package routes
 
 import (
-	"github.com/flarehotspot/sdk/api/plugin"
 	"github.com/flarehotspot/sdk/api/http/router"
+	"github.com/flarehotspot/sdk/api/plugin"
 	"github.com/flarehotspot/wifi-hotspot/app/controllers"
 	"github.com/flarehotspot/wifi-hotspot/app/routes/names"
 )
@@ -21,5 +21,10 @@ func SetupRoutes(api plugin.IPluginApi) {
 	rtr.PluginRouter().Group("/payments", func(subrouter router.IRouter) {
 		subrouter.Use(deviceMw)
 		subrouter.Get("/received", paymentsCtrl.PaymentRecevied).Name(names.RoutePaymentReceived)
+	})
+
+	rtr.PluginRouter().Group("/session", func(subrouter router.IRouter) {
+		subrouter.Use(deviceMw)
+		subrouter.Get("/start", portalCtrl.StartSession).Name(names.RouteStartSession)
 	})
 }

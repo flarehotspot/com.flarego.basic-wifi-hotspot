@@ -1,6 +1,7 @@
 {
   "labels": {
-    "insert_coin": "Insert Coin"
+    "insert_coin": "Insert Coin",
+    "start_session": "Start Session"
   },
   "errors": {}
 }
