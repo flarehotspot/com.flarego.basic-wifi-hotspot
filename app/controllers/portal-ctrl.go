@@ -1,13 +1,15 @@
 package controllers
 
 import (
+	"log"
+	"net/http"
+
 	"github.com/flarehotspot/sdk/api/connmgr"
 	"github.com/flarehotspot/sdk/api/http/contexts"
 	"github.com/flarehotspot/sdk/api/payments"
 	"github.com/flarehotspot/sdk/api/plugin"
+	"github.com/flarehotspot/sdk/api/utils"
 	"github.com/flarehotspot/wifi-hotspot/app/routes/names"
-	"log"
-	"net/http"
 )
 
 type PortalCtrl struct {
@@ -47,26 +49,20 @@ func (ctrl *PortalCtrl) StartSession(w http.ResponseWriter, r *http.Request) {
 	clntSym := r.Context().Value(contexts.ClientCtxKey)
 	clnt, ok := clntSym.(connmgr.IClientDevice)
 	if !ok {
-		http.Error(w, "Could not determine client device", http.StatusInternalServerError)
+		msg := "Could not determine client device"
+		ctrl.api.HttpApi().Respond().SetFlashMsg(w, utils.MsgTypeInfo, msg)
+		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
 	}
 
-	_, err := clnt.HasValidSession()
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+	if clnt.IsConnected() {
+		msg := "Client device is already connected."
+		ctrl.api.HttpApi().Respond().SetFlashMsg(w, utils.MsgTypeInfo, msg)
+		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
 	}
 
-	s, err := clnt.NextSession()
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	log.Println("Session Type:", s.SessionType())
-	log.Println("Time:", s.TimeSecs())
-	log.Println("Data:", s.DataMbyte())
-	log.Println("Session Expiration:", s.ExpiresAt())
-
-	w.WriteHeader(200)
+	err := clnt.Connect()
+	ctrl.api.HttpApi().Respond().SetFlashMsg(w, utils.MsgTypeInfo, err.Error())
+	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
