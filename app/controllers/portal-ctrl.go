@@ -44,5 +44,29 @@ func (ctrl *PortalCtrl) GetInsertCoin(w http.ResponseWriter, r *http.Request) {
 }
 
 func (ctrl *PortalCtrl) StartSession(w http.ResponseWriter, r *http.Request) {
+	clntSym := r.Context().Value(contexts.ClientCtxKey)
+	clnt, ok := clntSym.(connmgr.IClientDevice)
+	if !ok {
+		http.Error(w, "Could not determine client device", http.StatusInternalServerError)
+		return
+	}
 
+	_, err := clnt.HasValidSession()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	s, err := clnt.NextSession()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	log.Println("Session Type:", s.SessionType())
+	log.Println("Time:", s.TimeSecs())
+	log.Println("Data:", s.DataMbyte())
+	log.Println("Session Expiration:", s.ExpiresAt())
+
+	w.WriteHeader(200)
 }
