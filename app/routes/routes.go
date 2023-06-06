@@ -26,5 +26,6 @@ func SetupRoutes(api plugin.IPluginApi) {
 	rtr.PluginRouter().Group("/session", func(subrouter router.IRouter) {
 		subrouter.Use(deviceMw)
 		subrouter.Get("/start", portalCtrl.StartSession).Name(names.RouteStartSession)
+		subrouter.Get("/stop", portalCtrl.StopSession).Name(names.RouteStopSession)
 	})
 }

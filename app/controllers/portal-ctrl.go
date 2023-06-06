@@ -47,13 +47,7 @@ func (ctrl *PortalCtrl) GetInsertCoin(w http.ResponseWriter, r *http.Request) {
 
 func (ctrl *PortalCtrl) StartSession(w http.ResponseWriter, r *http.Request) {
 	clntSym := r.Context().Value(contexts.ClientCtxKey)
-	clnt, ok := clntSym.(connmgr.IClientDevice)
-	if !ok {
-		msg := "Could not determine client device"
-		ctrl.api.HttpApi().Respond().SetFlashMsg(w, utils.MsgTypeInfo, msg)
-		http.Redirect(w, r, "/", http.StatusSeeOther)
-		return
-	}
+	clnt := clntSym.(connmgr.IClientDevice)
 
 	if clnt.IsConnected() {
 		msg := "Client device is already connected."
@@ -63,6 +57,32 @@ func (ctrl *PortalCtrl) StartSession(w http.ResponseWriter, r *http.Request) {
 	}
 
 	err := clnt.Connect()
-	ctrl.api.HttpApi().Respond().SetFlashMsg(w, utils.MsgTypeInfo, err.Error())
+	if err != nil {
+		ctrl.api.HttpApi().Respond().SetFlashMsg(w, utils.MsgTypeError, err.Error())
+	} else {
+		ctrl.api.HttpApi().Respond().SetFlashMsg(w, utils.MsgTypeInfo, "You are now connected to internet.")
+	}
+
+	http.Redirect(w, r, "/", http.StatusSeeOther)
+}
+
+func (ctrl *PortalCtrl) StopSession(w http.ResponseWriter, r *http.Request) {
+	clntSym := r.Context().Value(contexts.ClientCtxKey)
+	clnt := clntSym.(connmgr.IClientDevice)
+
+	if !clnt.IsConnected() {
+		msg := "Client device is not connected."
+		ctrl.api.HttpApi().Respond().SetFlashMsg(w, utils.MsgTypeInfo, msg)
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
+	}
+
+	err := clnt.Disconnect("Session paused.")
+	if err != nil {
+		ctrl.api.HttpApi().Respond().SetFlashMsg(w, utils.MsgTypeError, err.Error())
+	} else {
+		ctrl.api.HttpApi().Respond().SetFlashMsg(w, utils.MsgTypeInfo, "You are now disconnected from internet.")
+	}
+
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }

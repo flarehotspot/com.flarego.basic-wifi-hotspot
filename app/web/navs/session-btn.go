@@ -38,7 +38,11 @@ func (self *SessionBtnNav) Text() string {
 		return "Pause"
 	}
 
-	return "Connect"
+	if self.canConnect() {
+		return "Connect"
+	}
+
+	return "No Session"
 }
 
 func (self *SessionBtnNav) Description() string {
@@ -46,7 +50,19 @@ func (self *SessionBtnNav) Description() string {
 }
 
 func (self *SessionBtnNav) Href() string {
-	return self.api.Utils().UrlForRoute(names.RouteStartSession)
+	clnt, err := self.client()
+	if err != nil {
+		return err.Error()
+	}
+
+	if !clnt.IsConnected() {
+		if self.canConnect() {
+			return self.api.Utils().UrlForRoute(names.RouteStartSession)
+		}
+		return "/"
+	} else {
+		return self.api.Utils().UrlForRoute(names.RouteStopSession)
+	}
 }
 
 func (self *SessionBtnNav) client() (connmgr.IClientDevice, error) {
@@ -60,4 +76,18 @@ func (self *SessionBtnNav) client() (connmgr.IClientDevice, error) {
 		return nil, errors.New("Could not determine client device.")
 	}
 	return clnt, nil
+}
+
+func (self *SessionBtnNav) canConnect() bool {
+	clnt, err := self.client()
+	if err != nil {
+		return false
+	}
+
+	ok, err := clnt.HasValidSession()
+	if err != nil {
+		return false
+	}
+
+	return ok
 }
