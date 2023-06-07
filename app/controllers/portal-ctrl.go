@@ -6,6 +6,7 @@ import (
 
 	"github.com/flarehotspot/sdk/api/connmgr"
 	"github.com/flarehotspot/sdk/api/http/contexts"
+	"github.com/flarehotspot/sdk/api/http/flash"
 	"github.com/flarehotspot/sdk/api/payments"
 	"github.com/flarehotspot/sdk/api/plugin"
 	"github.com/flarehotspot/sdk/api/utils"
@@ -58,9 +59,9 @@ func (ctrl *PortalCtrl) StartSession(w http.ResponseWriter, r *http.Request) {
 
 	err := clnt.Connect()
 	if err != nil {
-		ctrl.api.HttpApi().Respond().SetFlashMsg(w, utils.MsgTypeError, err.Error())
+		ctrl.api.HttpApi().Respond().SetFlashMsg(w, flash.FlashTypeError, err.Error())
 	} else {
-		ctrl.api.HttpApi().Respond().SetFlashMsg(w, utils.MsgTypeInfo, "You are now connected to internet.")
+		ctrl.api.HttpApi().Respond().SetFlashMsg(w, flash.FlashTypeInfo, "You are now connected to internet.")
 	}
 
 	http.Redirect(w, r, "/", http.StatusSeeOther)
@@ -79,9 +80,9 @@ func (ctrl *PortalCtrl) StopSession(w http.ResponseWriter, r *http.Request) {
 
 	err := clnt.Disconnect("Session paused.")
 	if err != nil {
-		ctrl.api.HttpApi().Respond().SetFlashMsg(w, utils.MsgTypeError, err.Error())
+		ctrl.api.HttpApi().Respond().SetFlashMsg(w, flash.FlashTypeError, err.Error())
 	} else {
-		ctrl.api.HttpApi().Respond().SetFlashMsg(w, utils.MsgTypeInfo, "You are now disconnected from internet.")
+		ctrl.api.HttpApi().Respond().SetFlashMsg(w, flash.FlashTypeError, "You are now disconnected from internet.")
 	}
 
 	http.Redirect(w, r, "/", http.StatusSeeOther)

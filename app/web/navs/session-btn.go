@@ -6,7 +6,6 @@ import (
 
 	"github.com/flarehotspot/sdk/api/connmgr"
 	"github.com/flarehotspot/sdk/api/http/contexts"
-	"github.com/flarehotspot/sdk/api/http/navigation"
 	"github.com/flarehotspot/sdk/api/plugin"
 	"github.com/flarehotspot/wifi-hotspot/app/routes/names"
 )
@@ -18,10 +17,6 @@ type SessionBtnNav struct {
 
 func NewSessionBtnNav(api plugin.IPluginApi, r *http.Request) *SessionBtnNav {
 	return &SessionBtnNav{api, r}
-}
-
-func (self *SessionBtnNav) Handler(r *http.Request) navigation.IPortalItemData {
-	return NewSessionBtnNav(self.api, r)
 }
 
 func (self *SessionBtnNav) IconPath() string {
