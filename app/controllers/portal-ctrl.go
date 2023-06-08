@@ -28,7 +28,6 @@ func (ctrl *PortalCtrl) GetInsertCoin(w http.ResponseWriter, r *http.Request) {
 		log.Println("Insert coin device mac: ", device.MacAddress())
 
 		item := &payments.PurchaseItem{
-			Sku:         "some-sku",
 			Name:        "Wifi Connection",
 			Description: "Purchase for wifi connection",
 			Price:       11.1,
