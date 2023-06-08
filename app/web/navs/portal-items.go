@@ -12,11 +12,17 @@ import (
 func SetPortalItems(api plugin.IPluginApi) {
 	api.NavApi().PortalNavsFn(func(r *http.Request) []navigation.IPortalItem {
 		inscoin := navgen.NewPortalItem(api, "insert_coin", true, names.RouteInsertCoin)
-		startSession := NewSessionBtnNav(api, r)
+		navs := []navigation.IPortalItem{inscoin}
 
-		return []navigation.IPortalItem{
-			inscoin,
-			startSession,
+		startSession := NewSessionBtnNav(api, r)
+		clnt, err := startSession.client()
+
+		if err == nil {
+			if ok, err := clnt.HasValidSession(); err == nil && ok {
+				navs = append(navs, startSession)
+			}
 		}
+
+		return navs
 	})
 }
