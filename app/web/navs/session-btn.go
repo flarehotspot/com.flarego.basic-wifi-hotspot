@@ -5,8 +5,8 @@ import (
 	"net/http"
 
 	"github.com/flarehotspot/sdk/api/connmgr"
-	"github.com/flarehotspot/sdk/api/http/contexts"
 	"github.com/flarehotspot/sdk/api/plugin"
+	"github.com/flarehotspot/sdk/utils/constants"
 	"github.com/flarehotspot/wifi-hotspot/app/routes/names"
 )
 
@@ -65,7 +65,7 @@ func (self *SessionBtnNav) client() (connmgr.IClientDevice, error) {
 		return nil, errors.New("Session http request is not initialized.")
 	}
 
-	clntSym := self.r.Context().Value(contexts.ClientCtxKey)
+	clntSym := self.r.Context().Value(constants.ClientCtxKey)
 	clnt, ok := clntSym.(connmgr.IClientDevice)
 	if !ok {
 		return nil, errors.New("Could not determine client device.")
