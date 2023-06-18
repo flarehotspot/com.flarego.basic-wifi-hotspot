@@ -15,10 +15,8 @@ func SetPortalItems(api plugin.IPluginApi) {
 		navs := []navigation.IPortalItem{inscoin}
 
 		startSession := NewSessionBtnNav(api, r)
-		clnt, err := startSession.client()
-
-		if err == nil {
-			if ok, err := clnt.HasValidSession(); err == nil && ok {
+		if clnt, err := startSession.client(); err == nil {
+			if clnt.HasSession() {
 				navs = append(navs, startSession)
 			}
 		}

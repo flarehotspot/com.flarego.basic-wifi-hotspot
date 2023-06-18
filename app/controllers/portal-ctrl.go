@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"errors"
 	"log"
 	"net/http"
 
@@ -8,6 +9,7 @@ import (
 	"github.com/flarehotspot/sdk/api/payments"
 	"github.com/flarehotspot/sdk/api/plugin"
 	"github.com/flarehotspot/sdk/utils/constants"
+	"github.com/flarehotspot/sdk/utils/http/req"
 	"github.com/flarehotspot/wifi-hotspot/app/routes/names"
 )
 
@@ -20,13 +22,12 @@ func NewPortalCtrl(api plugin.IPluginApi) *PortalCtrl {
 }
 
 func (ctrl *PortalCtrl) GetInsertCoin(w http.ResponseWriter, r *http.Request) {
-	client, ok := r.Context().Value(constants.ClientCtxKey).(connmgr.IClientDevice)
-	if ok && client != nil {
-		device := client.Device()
-		log.Println("Insert coin device mac: ", device.MacAddress())
+	clnt, ok := r.Context().Value(constants.ClientCtxKey).(connmgr.IClientDevice)
+	if ok && clnt != nil {
+		log.Println("Insert coin device mac: ", clnt.MacAddr())
 
 		item := &payments.PurchaseItem{
-      Sku: "wifi-connection",
+			Sku:         "wifi-connection",
 			Name:        "Wifi Connection",
 			Description: "Purchase for wifi connection",
 			Price:       11.1,
@@ -45,17 +46,22 @@ func (ctrl *PortalCtrl) GetInsertCoin(w http.ResponseWriter, r *http.Request) {
 }
 
 func (ctrl *PortalCtrl) StartSession(w http.ResponseWriter, r *http.Request) {
-	clntSym := r.Context().Value(constants.ClientCtxKey)
-	clnt := clntSym.(connmgr.IClientDevice)
+	clnt, err := req.ClientDevice(r)
 
-	if clnt.IsConnected() {
+	if err != nil {
+		ctrl.api.HttpApi().Respond().SetFlashMsg(w, constants.FlashTypeError, err.Error())
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
+	}
+
+	if ctrl.api.ClientMgr().IsConnected(clnt) {
 		msg := "Client device is already connected."
 		ctrl.api.HttpApi().Respond().SetFlashMsg(w, constants.TranslateInfo, msg)
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
 	}
 
-	err := clnt.Connect()
+	err = ctrl.api.ClientMgr().Connect(clnt)
 	if err != nil {
 		ctrl.api.HttpApi().Respond().SetFlashMsg(w, constants.FlashTypeError, err.Error())
 	} else {
@@ -66,21 +72,27 @@ func (ctrl *PortalCtrl) StartSession(w http.ResponseWriter, r *http.Request) {
 }
 
 func (ctrl *PortalCtrl) StopSession(w http.ResponseWriter, r *http.Request) {
-	clntSym := r.Context().Value(constants.ClientCtxKey)
-	clnt := clntSym.(connmgr.IClientDevice)
+	clnt, err := req.ClientDevice(r)
 
-	if !clnt.IsConnected() {
+	if err != nil {
+		ctrl.api.HttpApi().Respond().SetFlashMsg(w, constants.TranslateInfo, err.Error())
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
+	}
+
+	if !ctrl.api.ClientMgr().IsConnected(clnt) {
 		msg := "Client device is not connected."
 		ctrl.api.HttpApi().Respond().SetFlashMsg(w, constants.TranslateInfo, msg)
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
 	}
 
-	err := clnt.Disconnect("Session paused.")
+  msg := "You are now disconnected from internet."
+	err = ctrl.api.ClientMgr().Disconnect(clnt, errors.New(msg))
 	if err != nil {
 		ctrl.api.HttpApi().Respond().SetFlashMsg(w, constants.FlashTypeError, err.Error())
 	} else {
-		ctrl.api.HttpApi().Respond().SetFlashMsg(w, constants.FlashTypeError, "You are now disconnected from internet.")
+		ctrl.api.HttpApi().Respond().SetFlashMsg(w, constants.FlashTypeError, msg)
 	}
 
 	http.Redirect(w, r, "/", http.StatusSeeOther)

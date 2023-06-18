@@ -29,7 +29,7 @@ func (self *SessionBtnNav) Text() string {
 		return err.Error()
 	}
 
-	if clnt.IsConnected() {
+	if self.api.ClientMgr().IsConnected(clnt) {
 		return "Pause"
 	}
 
@@ -50,7 +50,7 @@ func (self *SessionBtnNav) Href() string {
 		return err.Error()
 	}
 
-	if !clnt.IsConnected() {
+	if !self.api.ClientMgr().IsConnected(clnt) {
 		if self.canConnect() {
 			return self.api.Utils().UrlForRoute(names.RouteStartSession)
 		}
@@ -79,10 +79,5 @@ func (self *SessionBtnNav) canConnect() bool {
 		return false
 	}
 
-	ok, err := clnt.HasValidSession()
-	if err != nil {
-		return false
-	}
-
-	return ok
+	return clnt.HasSession()
 }

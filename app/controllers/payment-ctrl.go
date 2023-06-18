@@ -35,9 +35,9 @@ func (self *PaymentCtrl) PaymentRecevied(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	devId := clnt.Device().Id()
+	devId := clnt.Id()
 	stype := constants.SessionTypeTime.ToUint8()
-	_, err = self.api.Models().Session().CreateTx(tx, ctx, devId, stype, 100, 0, 0, 0, nil)
+	_, err = self.api.Models().Session().CreateTx(tx, ctx, devId, stype, 100, 0, 0, 0, nil, 111, 222)
 	if err != nil {
 		log.Println("Error creating session: ", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
