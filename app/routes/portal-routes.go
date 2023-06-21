@@ -7,7 +7,7 @@ import (
 	"github.com/flarehotspot/wifi-hotspot/app/routes/names"
 )
 
-func SetupRoutes(api plugin.IPluginApi) {
+func PortalRoutes(api plugin.IPluginApi) {
 	rtr := api.HttpApi().Router()
 	portalCtrl := controllers.NewPortalCtrl(api)
 	paymentsCtrl := controllers.NewPaymentCtrl(api)
