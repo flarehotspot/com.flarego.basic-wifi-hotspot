@@ -17,21 +17,21 @@ func (self *PaymentCtrl) PaymentRecevied(w http.ResponseWriter, r *http.Request)
 	info, err := self.api.PaymentsApi().ParsePaymentInfo(r)
 	if err != nil {
 		log.Println(err)
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		self.api.HttpApi().Respond().Error(w, err)
 		return
 	}
 
 	ctx := r.Context()
 	tx, err := self.api.Db().BeginTx(ctx, nil)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		self.api.HttpApi().Respond().Error(w, err)
 		return
 	}
 	defer tx.Rollback()
 
 	clnt, err := req.ClientDevice(r)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		self.api.HttpApi().Respond().Error(w, err)
 		return
 	}
 
@@ -40,20 +40,20 @@ func (self *PaymentCtrl) PaymentRecevied(w http.ResponseWriter, r *http.Request)
 	_, err = self.api.Models().Session().CreateTx(tx, ctx, devId, stype, 100, 0, 0, 0, nil, 111, 222)
 	if err != nil {
 		log.Println("Error creating session: ", err)
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		self.api.HttpApi().Respond().Error(w, err)
 		return
 	}
 
 	err = info.Purchase.Confirm(r.Context())
 	if err != nil {
 		log.Println(err)
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		self.api.HttpApi().Respond().Error(w, err)
 		return
 	}
 
 	err = tx.Commit()
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		self.api.HttpApi().Respond().Error(w, err)
 		return
 	}
 
