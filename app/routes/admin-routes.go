@@ -11,4 +11,6 @@ func AdminRoutes(api plugin.IPluginApi) {
 	ratesCtrl := controllers.NewWifiRatesCtrl(api)
 
 	rtr.Get("/rates", ratesCtrl.Index).Name(names.RouteAdminRatesIndex)
+	rtr.Post("/rates/save", ratesCtrl.Save).Name(names.RouteAdminRatesSave)
+	rtr.Get("/rates/{uuid}/delete", ratesCtrl.Delete).Name(names.RouteAdminRatesDelete)
 }

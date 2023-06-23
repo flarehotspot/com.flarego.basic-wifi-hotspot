@@ -1,1 +1,64 @@
-<h1>Wifi Rates List</h1>
+<div class="container-fluid">
+  <h1>Wifi Rates List</h1>
+
+  <form method="POST" action='{{ helpers.UrlForRoute("admin:rates:save") }}'>
+    <div class="row">
+      <div class="col">
+        <label>Network</label>
+        <input type="text" name="network" value="{{ network }}" />
+      </div>
+    </div>
+
+    {% for rate in rates %}
+    <div class="row wifi-rate-item">
+      <input type="hidden" name="uuid" value="{{ rate.Uuid }}" />
+      <div class="col">
+        <label>Amount</label>
+        <input type="number" name="amount" value="{{ rate.Amount | floatformat:2 }}" />
+      </div>
+
+      <div class="col">
+        <label>Minutes</label>
+        <input type="number" name="time_mins" value="{{ rate.TimeMins }}" />
+      </div>
+
+      <div class="col">
+        <label>Megabytes</label>
+        <input type="number" name="data_mbytes" value="{{ rate.DataMbytes }}" />
+      </div>
+
+      <div class="col">
+        <a href='{{ helpers.UrlForRoute("admin:rates:delete", "uuid", rate.Uuid) }}' class="btn btn-danger">Delete</a>
+      </div>
+    </div>
+    {% endfor %}
+
+    <!-- New rate form -->
+    <div id="new-rate-form" class="row wifi-rate-item" style="display: none">
+      <input id="new-rate-checkbox" type="checkbox" name="new_rate" style="display: none" />
+      <input type="hidden" name="uuid" value="" />
+      <div class="col">
+        <label>Amount</label>
+        <input type="number" name="amount" value="0" />
+      </div>
+
+      <div class="col">
+        <label>Minutes</label>
+        <input type="number" name="time_mins" value="0" />
+      </div>
+
+      <div class="col">
+        <label>Megabytes</label>
+        <input type="number" name="data_mbytes" value="0" />
+      </div>
+
+      <div class="col">
+        <a id="cancel-new-rate" class="btn btn-warning">Cancel</a>
+      </div>
+    </div>
+
+    <hr />
+    <a id="new-rate-btn" href="javascript:" class="btn btn-primary">New Rate</a>
+    <button type="submit" class="btn btn-success">Save</button>
+  </form>
+</div>
