@@ -35,9 +35,42 @@ func (self *PaymentCtrl) PaymentRecevied(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
+	amount, err := info.Purchase.PaymentsTotalTx(tx, ctx)
+	if err != nil {
+		self.api.HttpApi().Respond().Error(w, err)
+		return
+	}
+
 	devId := clnt.Id()
-	stype := constants.SessionTypeTime.ToUint8()
-	_, err = self.api.Models().Session().CreateTx(tx, ctx, devId, stype, 100, 0, 0, 0, nil, 111, 222)
+	t := constants.SessionTypeTime.ToUint8()
+
+	result, err := self.api.ConfigApi().WifiRates().ComputeSession(clnt.IpAddr(), amount, t)
+	if err != nil {
+		self.api.HttpApi().Respond().Error(w, err)
+		return
+	}
+
+	speed, err := self.api.ConfigApi().SpeedLimiter().FindByNet(clnt.IpAddr())
+	if err != nil {
+		self.api.HttpApi().Respond().Error(w, err)
+		return
+	}
+
+	minutes := result.TimeMins
+	mbytes := result.DataMbytes
+	exp := self.api.ConfigApi().Sessions().ComputeExpDays(minutes, mbytes)
+	var downMbits uint
+	var upMbits uint
+
+	if speed.UseGlobal {
+		downMbits = speed.GlobalDownMbits
+		upMbits = speed.GlobalUpMbits
+	} else {
+		downMbits = speed.UserDownMbits
+		upMbits = speed.UserUpMbits
+	}
+
+	_, err = self.api.Models().Session().CreateTx(tx, ctx, devId, t, minutes, mbytes, &exp, downMbits, upMbits)
 	if err != nil {
 		log.Println("Error creating session: ", err)
 		self.api.HttpApi().Respond().Error(w, err)
