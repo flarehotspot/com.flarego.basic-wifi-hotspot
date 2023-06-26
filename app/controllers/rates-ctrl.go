@@ -25,7 +25,7 @@ func NewWifiRatesCtrl(api plugin.IPluginApi) *WifiRatesCtrl {
 func (self *WifiRatesCtrl) Index(w http.ResponseWriter, r *http.Request) {
 	rates, err := self.api.ConfigApi().WifiRates().All()
 	if err != nil {
-		self.api.HttpApi().Respond().Error(w, err)
+		self.api.HttpApi().Respond().Error(w, r, err)
 		return
 	}
 
@@ -44,13 +44,13 @@ func (self *WifiRatesCtrl) Index(w http.ResponseWriter, r *http.Request) {
 func (self *WifiRatesCtrl) Save(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
 	if err != nil {
-		self.api.HttpApi().Respond().Error(w, err)
+		self.api.HttpApi().Respond().Error(w, r, err)
 		return
 	}
 
 	rates, err := self.api.ConfigApi().WifiRates().All()
 	if err != nil {
-		self.api.HttpApi().Respond().Error(w, err)
+		self.api.HttpApi().Respond().Error(w, r, err)
 		return
 	}
 
@@ -76,7 +76,7 @@ func (self *WifiRatesCtrl) Save(w http.ResponseWriter, r *http.Request) {
 
 	ratesData, err := formToRates(formData)
 	if err != nil {
-		self.api.HttpApi().Respond().Error(w, err)
+		self.api.HttpApi().Respond().Error(w, r, err)
 		return
 	}
 
@@ -110,7 +110,7 @@ func (self *WifiRatesCtrl) Save(w http.ResponseWriter, r *http.Request) {
 
 	_, err = self.api.ConfigApi().WifiRates().Write(newRates)
 	if err != nil {
-		self.api.HttpApi().Respond().Error(w, err)
+		self.api.HttpApi().Respond().Error(w, r, err)
 		return
 	}
 
@@ -122,7 +122,7 @@ func (self *WifiRatesCtrl) Delete(w http.ResponseWriter, r *http.Request) {
 	uuid := mux.Vars(r)["uuid"]
 	rates, err := self.api.ConfigApi().WifiRates().All()
 	if err != nil {
-		self.api.HttpApi().Respond().Error(w, err)
+		self.api.HttpApi().Respond().Error(w, r, err)
 		return
 	}
 
@@ -132,7 +132,7 @@ func (self *WifiRatesCtrl) Delete(w http.ResponseWriter, r *http.Request) {
 
 	_, err = self.api.ConfigApi().WifiRates().Write(rates)
 	if err != nil {
-		self.api.HttpApi().Respond().Error(w, err)
+		self.api.HttpApi().Respond().Error(w, r, err)
 		return
 	}
 

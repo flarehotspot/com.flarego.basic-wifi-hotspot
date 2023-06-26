@@ -17,27 +17,27 @@ func (self *PaymentCtrl) PaymentRecevied(w http.ResponseWriter, r *http.Request)
 	info, err := self.api.PaymentsApi().ParsePaymentInfo(r)
 	if err != nil {
 		log.Println(err)
-		self.api.HttpApi().Respond().Error(w, err)
+		self.api.HttpApi().Respond().Error(w, r, err)
 		return
 	}
 
 	ctx := r.Context()
 	tx, err := self.api.Db().BeginTx(ctx, nil)
 	if err != nil {
-		self.api.HttpApi().Respond().Error(w, err)
+		self.api.HttpApi().Respond().Error(w, r, err)
 		return
 	}
 	defer tx.Rollback()
 
 	clnt, err := req.ClientDevice(r)
 	if err != nil {
-		self.api.HttpApi().Respond().Error(w, err)
+		self.api.HttpApi().Respond().Error(w, r, err)
 		return
 	}
 
 	amount, err := info.Purchase.PaymentsTotalTx(tx, ctx)
 	if err != nil {
-		self.api.HttpApi().Respond().Error(w, err)
+		self.api.HttpApi().Respond().Error(w, r, err)
 		return
 	}
 
@@ -46,13 +46,13 @@ func (self *PaymentCtrl) PaymentRecevied(w http.ResponseWriter, r *http.Request)
 
 	result, err := self.api.ConfigApi().WifiRates().ComputeSession(clnt.IpAddr(), amount, t)
 	if err != nil {
-		self.api.HttpApi().Respond().Error(w, err)
+		self.api.HttpApi().Respond().Error(w, r, err)
 		return
 	}
 
 	speed, err := self.api.ConfigApi().SpeedLimiter().FindByNet(clnt.IpAddr())
 	if err != nil {
-		self.api.HttpApi().Respond().Error(w, err)
+		self.api.HttpApi().Respond().Error(w, r, err)
 		return
 	}
 
@@ -73,20 +73,20 @@ func (self *PaymentCtrl) PaymentRecevied(w http.ResponseWriter, r *http.Request)
 	_, err = self.api.Models().Session().CreateTx(tx, ctx, devId, t, minutes, mbytes, &exp, downMbits, upMbits)
 	if err != nil {
 		log.Println("Error creating session: ", err)
-		self.api.HttpApi().Respond().Error(w, err)
+		self.api.HttpApi().Respond().Error(w, r, err)
 		return
 	}
 
 	err = info.Purchase.Confirm(r.Context())
 	if err != nil {
 		log.Println(err)
-		self.api.HttpApi().Respond().Error(w, err)
+		self.api.HttpApi().Respond().Error(w, r, err)
 		return
 	}
 
 	err = tx.Commit()
 	if err != nil {
-		self.api.HttpApi().Respond().Error(w, err)
+		self.api.HttpApi().Respond().Error(w, r, err)
 		return
 	}
 
