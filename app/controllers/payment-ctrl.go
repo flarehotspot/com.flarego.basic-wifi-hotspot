@@ -6,7 +6,6 @@ import (
 
 	"github.com/flarehotspot/sdk/api/plugin"
 	"github.com/flarehotspot/sdk/utils/constants"
-	"github.com/flarehotspot/sdk/utils/http/req"
 )
 
 type PaymentCtrl struct {
@@ -29,7 +28,7 @@ func (self *PaymentCtrl) PaymentRecevied(w http.ResponseWriter, r *http.Request)
 	}
 	defer tx.Rollback()
 
-	clnt, err := req.ClientDevice(r)
+	clnt, err := self.api.ClientReg().CurrentClient(r)
 	if err != nil {
 		self.api.HttpApi().Respond().Error(w, r, err)
 		return
