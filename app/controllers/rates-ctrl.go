@@ -11,7 +11,6 @@ import (
 	"github.com/flarehotspot/sdk/utils/slices"
 	"github.com/flarehotspot/sdk/utils/strings"
 	"github.com/flarehotspot/wifi-hotspot/app/routes/names"
-	"github.com/gorilla/mux"
 )
 
 type WifiRatesCtrl struct {
@@ -119,7 +118,7 @@ func (self *WifiRatesCtrl) Save(w http.ResponseWriter, r *http.Request) {
 }
 
 func (self *WifiRatesCtrl) Delete(w http.ResponseWriter, r *http.Request) {
-	uuid := mux.Vars(r)["uuid"]
+	uuid := self.api.HttpApi().MuxVars(r)["uuid"]
 	rates, err := self.api.ConfigApi().WifiRates().All()
 	if err != nil {
 		self.api.HttpApi().Respond().Error(w, r, err)
