@@ -1,64 +1,134 @@
-<div class="container-fluid">
-  <h1>Wifi Rates List</h1>
-
-  <form method="POST" action='{{ helpers.UrlForRoute("admin:rates:save") }}'>
-    <div class="row">
-      <div class="col">
-        <label>Network</label>
-        <input type="text" name="network" value="{{ network }}" />
+<div class="container">
+  <div class="card mt-4 mb-2" style="height: 100%">
+    <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+      <div
+        class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3"
+      >
+        <h6 class="text-white text-capitalize ps-3">Wifi Rates List</h6>
       </div>
     </div>
+    <div class="card-body px-0 pb-2">
+      <div class="container-fluid">
+        <form
+          method="POST"
+          action='{{ helpers.UrlForRoute("admin:rates:save") }}'
+        >
+          <div class="row my-2">
+            <div class="col col-4">
+              <label class="form-label">Network</label>
+              <input
+                class="form-control ps-2 border"
+                type="text"
+                name="network"
+                value="{{ network }}"
+              />
+            </div>
+          </div>
 
-    {% for rate in rates %}
-    <div class="row wifi-rate-item">
-      <input type="hidden" name="uuid" value="{{ rate.Uuid }}" />
-      <div class="col">
-        <label>Amount</label>
-        <input type="number" name="amount" value="{{ rate.Amount | floatformat:2 }}" />
-      </div>
+          <hr class="dark horizontal my-4" />
 
-      <div class="col">
-        <label>Minutes</label>
-        <input type="number" name="time_mins" value="{{ rate.TimeMins }}" />
-      </div>
+          {% for rate in rates %}
 
-      <div class="col">
-        <label>Megabytes</label>
-        <input type="number" name="data_mbytes" value="{{ rate.DataMbytes }}" />
-      </div>
+          <div class="row wifi-rate-item">
+            <input type="hidden" name="uuid" value="{{ rate.Uuid }}" />
+            <div class="col align-middle">
+              <label class="form-label">Amount</label>
+              <input
+                class="form-control border ps-2"
+                type="number"
+                name="amount"
+                value="{{ rate.Amount | floatformat:2 }}"
+              />
+            </div>
 
-      <div class="col">
-        <a href='{{ helpers.UrlForRoute("admin:rates:delete", "uuid", rate.Uuid) }}' class="btn btn-danger">Delete</a>
+            <div class="col align-middle">
+              <label class="form-label">Minutes</label>
+              <input
+                class="form-control border ps-2"
+                type="number"
+                name="time_mins"
+                value="{{ rate.TimeMins }}"
+              />
+            </div>
+
+            <div class="col align-middle">
+              <label class="form-label">Megabytes</label>
+              <input
+                class="form-control border ps-2"
+                type="number"
+                name="data_mbytes"
+                value="{{ rate.DataMbytes }}"
+              />
+            </div>
+
+            <div class="col d-flex align-items-end">
+              <a
+                href='{{ helpers.UrlForRoute("admin:rates:delete", "uuid", rate.Uuid) }}'
+                class="btn btn-danger"
+                >Delete</a
+              >
+            </div>
+          </div>
+          <hr class="border" />
+          {% endfor %}
+
+          <!-- New rate form -->
+          <div
+            id="new-rate-form"
+            class="row wifi-rate-item"
+            style="display: none"
+          >
+            <input
+              id="new-rate-checkbox"
+              type="checkbox"
+              name="new_rate"
+              style="display: none"
+            />
+            <input type="hidden" name="uuid" value="" />
+            <div class="col">
+              <label class="form-label">Amount</label>
+              <input
+                class="form-control ps-2 border border-2"
+                type="number"
+                name="amount"
+                value="0"
+              />
+            </div>
+
+            <div class="col align-middle">
+              <label class="form-label">Minutes</label>
+              <input
+                class="form-control ps-2 border border-2"
+                type="number"
+                name="time_mins"
+                value="0"
+              />
+            </div>
+
+            <div class="col align-middle">
+              <label class="form-label">Megabytes</label>
+              <input
+                class="form-control ps-2 border border-2"
+                type="number"
+                name="data_mbytes"
+                value="0"
+              />
+            </div>
+
+            <div class="col d-flex align-items-end">
+              <a id="cancel-new-rate" class="btn btn-warning">Cancel</a>
+            </div>
+          </div>
+
+          <hr />
+          <div class="container">
+            <a id="new-rate-btn" href="javascript:" class="btn btn-primary"
+              >New Rate</a
+            >
+            <button type="submit" class="btn btn-success">Save</button>
+          </div>
+        </form>
       </div>
     </div>
-    {% endfor %}
-
-    <!-- New rate form -->
-    <div id="new-rate-form" class="row wifi-rate-item" style="display: none">
-      <input id="new-rate-checkbox" type="checkbox" name="new_rate" style="display: none" />
-      <input type="hidden" name="uuid" value="" />
-      <div class="col">
-        <label>Amount</label>
-        <input type="number" name="amount" value="0" />
-      </div>
-
-      <div class="col">
-        <label>Minutes</label>
-        <input type="number" name="time_mins" value="0" />
-      </div>
-
-      <div class="col">
-        <label>Megabytes</label>
-        <input type="number" name="data_mbytes" value="0" />
-      </div>
-
-      <div class="col">
-        <a id="cancel-new-rate" class="btn btn-warning">Cancel</a>
-      </div>
-    </div>
-
-    <hr />
-    <a id="new-rate-btn" href="javascript:" class="btn btn-primary">New Rate</a>
-    <button type="submit" class="btn btn-success">Save</button>
-  </form>
+  </div>
 </div>
