@@ -5,7 +5,7 @@ import (
 
 	"github.com/flarehotspot/sdk/api/http/navigation"
 	"github.com/flarehotspot/sdk/api/plugin"
-	"github.com/flarehotspot/wifi-hotspot/app/routes/names"
+	"github.com/flarehotspot/com.flarego.basic-wifi-hotspot/app/routes/names"
 )
 
 func AdminWifiRates(api plugin.IPluginApi) {

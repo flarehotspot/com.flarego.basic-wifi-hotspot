@@ -9,7 +9,7 @@ import (
 	"github.com/flarehotspot/sdk/api/payments"
 	"github.com/flarehotspot/sdk/api/plugin"
 	"github.com/flarehotspot/sdk/utils/constants"
-	"github.com/flarehotspot/wifi-hotspot/app/routes/names"
+	"github.com/flarehotspot/com.flarego.basic-wifi-hotspot/app/routes/names"
 )
 
 type PortalCtrl struct {

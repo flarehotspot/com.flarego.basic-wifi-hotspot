@@ -10,7 +10,7 @@ import (
 	"github.com/flarehotspot/sdk/utils/constants"
 	"github.com/flarehotspot/sdk/utils/slices"
 	"github.com/flarehotspot/sdk/utils/strings"
-	"github.com/flarehotspot/wifi-hotspot/app/routes/names"
+	"github.com/flarehotspot/com.flarego.basic-wifi-hotspot/app/routes/names"
 )
 
 type WifiRatesCtrl struct {
