@@ -113,7 +113,7 @@ func (self *WifiRatesCtrl) Save(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	self.api.HttpApi().Respond().SetFlashMsg(w, constants.FlashTypeSuccess, "Wifi rate saved successfully.")
+	self.api.HttpApi().Respond().SetFlashMsg(w, cnts.FlashTypeSuccess, "Wifi rate saved successfully.")
 	http.Redirect(w, r, self.api.HttpApi().Router().UrlForRoute(names.RouteAdminRatesIndex), http.StatusSeeOther)
 }
 
@@ -135,7 +135,7 @@ func (self *WifiRatesCtrl) Delete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	self.api.HttpApi().Respond().SetFlashMsg(w, constants.FlashTypeInfo, "Wifi rate deleted successfully.")
+	self.api.HttpApi().Respond().SetFlashMsg(w, cnts.FlashTypeInfo, "Wifi rate deleted successfully.")
 	ratesUrl := self.api.HttpApi().Router().UrlForRoute(names.RouteAdminRatesIndex)
 	http.Redirect(w, r, ratesUrl, http.StatusSeeOther)
 }

@@ -41,7 +41,7 @@ func (self *PaymentCtrl) PaymentRecevied(w http.ResponseWriter, r *http.Request)
 	}
 
 	devId := clnt.Id()
-	t := constants.SessionTypeTime.ToUint8()
+	t := cnts.SessionTypeTime.ToUint8()
 
 	result, err := self.api.ConfigApi().WifiRates().ComputeSession(clnt.IpAddr(), amount, t)
 	if err != nil {
@@ -90,7 +90,7 @@ func (self *PaymentCtrl) PaymentRecevied(w http.ResponseWriter, r *http.Request)
 	}
 
 	log.Printf("Payment Received: \n%+v", info.Purchase)
-	self.api.HttpApi().Respond().SetFlashMsg(w, constants.FlashTypeSuccess, "Session created successfully.")
+	self.api.HttpApi().Respond().SetFlashMsg(w, cnts.FlashTypeSuccess, "Session created successfully.")
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
