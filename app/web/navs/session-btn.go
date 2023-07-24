@@ -1,6 +1,7 @@
 package navs
 
 import (
+	"context"
 	"errors"
 	"net/http"
 
@@ -33,7 +34,7 @@ func (self *SessionBtnNav) Text() string {
 		return "Pause"
 	}
 
-	if self.canConnect() {
+	if self.canConnect(self.r.Context()) {
 		return "Connect"
 	}
 
@@ -51,7 +52,7 @@ func (self *SessionBtnNav) Href() string {
 	}
 
 	if !self.api.ClientMgr().IsConnected(clnt) {
-		if self.canConnect() {
+		if self.canConnect(self.r.Context()) {
 			return self.api.HttpApi().Router().UrlForRoute(names.RouteStartSession)
 		}
 		return "/"
@@ -73,11 +74,11 @@ func (self *SessionBtnNav) client() (connmgr.IClientDevice, error) {
 	return clnt, nil
 }
 
-func (self *SessionBtnNav) canConnect() bool {
+func (self *SessionBtnNav) canConnect(ctx context.Context) bool {
 	clnt, err := self.client()
 	if err != nil {
 		return false
 	}
 
-	return clnt.HasSession()
+	return clnt.HasSession(ctx)
 }
