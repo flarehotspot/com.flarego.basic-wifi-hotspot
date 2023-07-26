@@ -9,7 +9,8 @@ import (
 	"github.com/flarehotspot/sdk/api/connmgr"
 	"github.com/flarehotspot/sdk/api/payments"
 	"github.com/flarehotspot/sdk/api/plugin"
-	"github.com/flarehotspot/sdk/utils/constants"
+	"github.com/flarehotspot/sdk/utils/contexts"
+	"github.com/flarehotspot/sdk/utils/flash"
 )
 
 type PortalCtrl struct {
@@ -21,7 +22,7 @@ func NewPortalCtrl(api plugin.IPluginApi) *PortalCtrl {
 }
 
 func (self *PortalCtrl) GetInsertCoin(w http.ResponseWriter, r *http.Request) {
-	clnt, ok := r.Context().Value(cnts.ClientCtxKey).(connmgr.IClientDevice)
+	clnt, ok := r.Context().Value(contexts.ClientCtxKey).(connmgr.IClientDevice)
 	if ok && clnt != nil {
 		log.Println("Insert coin device mac: ", clnt.MacAddr())
 
@@ -48,23 +49,23 @@ func (self *PortalCtrl) StartSession(w http.ResponseWriter, r *http.Request) {
 	clnt, err := self.api.ClientReg().CurrentClient(r)
 
 	if err != nil {
-		self.api.HttpApi().Respond().SetFlashMsg(w, cnts.FlashTypeError, err.Error())
+		self.api.HttpApi().Respond().SetFlashMsg(w, flash.Error, err.Error())
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
 	}
 
 	if self.api.ClientMgr().IsConnected(clnt) {
 		msg := "Client device is already connected."
-		self.api.HttpApi().Respond().SetFlashMsg(w, cnts.TranslateInfo, msg)
+		self.api.HttpApi().Respond().SetFlashMsg(w, flash.Warning, msg)
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
 	}
 
 	err = self.api.ClientMgr().Connect(clnt)
 	if err != nil {
-		self.api.HttpApi().Respond().SetFlashMsg(w, cnts.FlashTypeError, err.Error())
+		self.api.HttpApi().Respond().SetFlashMsg(w, flash.Error, err.Error())
 	} else {
-		self.api.HttpApi().Respond().SetFlashMsg(w, cnts.FlashTypeInfo, "You are now connected to internet.")
+		self.api.HttpApi().Respond().SetFlashMsg(w, flash.Success, "You are now connected to internet.")
 	}
 
 	http.Redirect(w, r, "/", http.StatusSeeOther)
@@ -74,14 +75,14 @@ func (self *PortalCtrl) StopSession(w http.ResponseWriter, r *http.Request) {
 	clnt, err := self.api.ClientReg().CurrentClient(r)
 
 	if err != nil {
-		self.api.HttpApi().Respond().SetFlashMsg(w, cnts.TranslateInfo, err.Error())
+		self.api.HttpApi().Respond().SetFlashMsg(w, flash.Info, err.Error())
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
 	}
 
 	if !self.api.ClientMgr().IsConnected(clnt) {
 		msg := "Client device is not connected."
-		self.api.HttpApi().Respond().SetFlashMsg(w, cnts.TranslateInfo, msg)
+		self.api.HttpApi().Respond().SetFlashMsg(w, flash.Info, msg)
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
 	}
@@ -89,9 +90,9 @@ func (self *PortalCtrl) StopSession(w http.ResponseWriter, r *http.Request) {
 	msg := "You are now disconnected from internet."
 	err = self.api.ClientMgr().Disconnect(clnt, errors.New(msg))
 	if err != nil {
-		self.api.HttpApi().Respond().SetFlashMsg(w, cnts.FlashTypeError, err.Error())
+		self.api.HttpApi().Respond().SetFlashMsg(w, flash.Error, err.Error())
 	} else {
-		self.api.HttpApi().Respond().SetFlashMsg(w, cnts.FlashTypeError, msg)
+		self.api.HttpApi().Respond().SetFlashMsg(w, flash.Error, msg)
 	}
 
 	http.Redirect(w, r, "/", http.StatusSeeOther)

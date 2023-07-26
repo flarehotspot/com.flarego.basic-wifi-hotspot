@@ -4,8 +4,9 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/flarehotspot/sdk/api/models"
 	"github.com/flarehotspot/sdk/api/plugin"
-	"github.com/flarehotspot/sdk/utils/constants"
+	"github.com/flarehotspot/sdk/utils/flash"
 )
 
 type PaymentCtrl struct {
@@ -41,7 +42,7 @@ func (self *PaymentCtrl) PaymentRecevied(w http.ResponseWriter, r *http.Request)
 	}
 
 	devId := clnt.Id()
-	t := cnts.SessionTypeTime.ToUint8()
+	t := models.SessionTypeTime.ToUint8()
 
 	result, err := self.api.ConfigApi().WifiRates().ComputeSession(clnt.IpAddr(), amount, t)
 	if err != nil {
@@ -90,7 +91,7 @@ func (self *PaymentCtrl) PaymentRecevied(w http.ResponseWriter, r *http.Request)
 	}
 
 	log.Printf("Payment Received: \n%+v", info.Purchase)
-	self.api.HttpApi().Respond().SetFlashMsg(w, cnts.FlashTypeSuccess, "Session created successfully.")
+	self.api.HttpApi().Respond().SetFlashMsg(w, flash.Success, "Session created successfully.")
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 

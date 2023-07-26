@@ -5,12 +5,12 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/flarehotspot/com.flarego.basic-wifi-hotspot/app/routes/names"
 	"github.com/flarehotspot/sdk/api/config"
 	"github.com/flarehotspot/sdk/api/plugin"
-	"github.com/flarehotspot/sdk/utils/constants"
+	"github.com/flarehotspot/sdk/utils/flash"
 	"github.com/flarehotspot/sdk/utils/slices"
 	"github.com/flarehotspot/sdk/utils/strings"
-	"github.com/flarehotspot/com.flarego.basic-wifi-hotspot/app/routes/names"
 )
 
 type WifiRatesCtrl struct {
@@ -113,7 +113,7 @@ func (self *WifiRatesCtrl) Save(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	self.api.HttpApi().Respond().SetFlashMsg(w, cnts.FlashTypeSuccess, "Wifi rate saved successfully.")
+	self.api.HttpApi().Respond().SetFlashMsg(w, flash.Success, "Wifi rate saved successfully.")
 	http.Redirect(w, r, self.api.HttpApi().Router().UrlForRoute(names.RouteAdminRatesIndex), http.StatusSeeOther)
 }
 
@@ -135,7 +135,7 @@ func (self *WifiRatesCtrl) Delete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	self.api.HttpApi().Respond().SetFlashMsg(w, cnts.FlashTypeInfo, "Wifi rate deleted successfully.")
+	self.api.HttpApi().Respond().SetFlashMsg(w, flash.Info, "Wifi rate deleted successfully.")
 	ratesUrl := self.api.HttpApi().Router().UrlForRoute(names.RouteAdminRatesIndex)
 	http.Redirect(w, r, ratesUrl, http.StatusSeeOther)
 }
