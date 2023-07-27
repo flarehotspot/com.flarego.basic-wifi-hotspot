@@ -1,17 +1,20 @@
+{{ $d := .Data }}
+{{ $h := .Helpers }}
+
 <div class="container">
-  <div class="card mt-4 mb-2" style="height: 100%">
-    <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+  <div class="card mt-4 mb-2">
+    <div class="card-header">
       <div
         class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3"
       >
-        <h6 class="text-white text-capitalize ps-3">Wifi Rates List</h6>
+        <h6 class="text-capitalize ps-3">Wifi Rates List</h6>
       </div>
     </div>
-    <div class="card-body px-0 pb-2">
+    <div class="card-body">
       <div class="container-fluid">
         <form
           method="POST"
-          action='{{ helpers.UrlForRoute("admin:rates:save") }}'
+          action='{{ $h.UrlForRoute "admin:rates:save" }}'
         >
           <div class="row my-2">
             <div class="col col-4">
@@ -20,24 +23,24 @@
                 class="form-control ps-2 border"
                 type="text"
                 name="network"
-                value="{{ network }}"
+                value="{{ $d.network }}"
               />
             </div>
           </div>
 
           <hr class="dark horizontal my-4" />
 
-          {% for rate in rates %}
+          {{ range $rate := $d.rates }}
 
           <div class="row wifi-rate-item">
-            <input type="hidden" name="uuid" value="{{ rate.Uuid }}" />
+            <input type="hidden" name="uuid" value="{{ $rate.Uuid }}" />
             <div class="col align-middle">
               <label class="form-label">Amount</label>
               <input
                 class="form-control border ps-2"
                 type="number"
                 name="amount"
-                value="{{ rate.Amount | floatformat:2 }}"
+                value='{{ $rate.Amount | printf "%0.2f" }}'
               />
             </div>
 
@@ -47,7 +50,7 @@
                 class="form-control border ps-2"
                 type="number"
                 name="time_mins"
-                value="{{ rate.TimeMins }}"
+                value="{{ $rate.TimeMins }}"
               />
             </div>
 
@@ -57,20 +60,20 @@
                 class="form-control border ps-2"
                 type="number"
                 name="data_mbytes"
-                value="{{ rate.DataMbytes }}"
+                value="{{ $rate.DataMbytes }}"
               />
             </div>
 
             <div class="col d-flex align-items-end">
               <a
-                href='{{ helpers.UrlForRoute("admin:rates:delete", "uuid", rate.Uuid) }}'
+                href='{{ $h.UrlForRoute "admin:rates:delete"  "uuid"  $rate.Uuid }}'
                 class="btn btn-danger"
                 >Delete</a
               >
             </div>
           </div>
           <hr class="border" />
-          {% endfor %}
+          {{ end }}
 
           <!-- New rate form -->
           <div
