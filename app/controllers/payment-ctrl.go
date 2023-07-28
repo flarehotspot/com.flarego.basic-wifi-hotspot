@@ -70,7 +70,7 @@ func (self *PaymentCtrl) PaymentRecevied(w http.ResponseWriter, r *http.Request)
 		upMbits = speed.UserUpMbits
 	}
 
-	_, err = self.api.Models().Session().CreateTx(tx, ctx, devId, t, minutes, mbytes, &exp, downMbits, upMbits)
+	_, err = self.api.Models().Session().CreateTx(tx, ctx, devId, t, minutes, float64(mbytes), &exp, downMbits, upMbits)
 	if err != nil {
 		log.Println("Error creating session: ", err)
 		self.api.HttpApi().Respond().Error(w, r, err)
