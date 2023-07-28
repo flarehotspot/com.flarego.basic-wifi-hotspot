@@ -37,7 +37,7 @@ func (self *WifiRatesCtrl) Index(w http.ResponseWriter, r *http.Request) {
 		"rates":   rates,
 		"network": network,
 	}
-	self.api.HttpApi().Respond().AdminView(w, r, "rates/index.html", data)
+	self.api.HttpApi().Respond().AdminView(w, r, "rates/index.html", nil, data)
 }
 
 func (self *WifiRatesCtrl) Save(w http.ResponseWriter, r *http.Request) {
