@@ -8,23 +8,28 @@ import (
 	"github.com/flarehotspot/com.flarego.basic-wifi-hotspot/app/routes/names"
 	"github.com/flarehotspot/sdk/api/config"
 	"github.com/flarehotspot/sdk/api/plugin"
+	"github.com/flarehotspot/sdk/utils/errutil"
 	"github.com/flarehotspot/sdk/utils/flash"
 	"github.com/flarehotspot/sdk/utils/slices"
 	"github.com/flarehotspot/sdk/utils/strings"
 )
 
 type WifiRatesCtrl struct {
-	api plugin.IPluginApi
+	api      plugin.IPluginApi
+	indexUrl string
+	errRoute *errutil.ErrRedirect
 }
 
 func NewWifiRatesCtrl(api plugin.IPluginApi) *WifiRatesCtrl {
-	return &WifiRatesCtrl{api}
+	indexUrl := api.HttpApi().Router().UrlForRoute(names.RouteAdminRatesIndex)
+	errRoute := errutil.NewErrRedirect(indexUrl)
+	return &WifiRatesCtrl{api, indexUrl, errRoute}
 }
 
-func (self *WifiRatesCtrl) Index(w http.ResponseWriter, r *http.Request) {
-	rates, err := self.api.ConfigApi().WifiRates().All()
+func (ctrl *WifiRatesCtrl) Index(w http.ResponseWriter, r *http.Request) {
+	rates, err := ctrl.api.ConfigApi().WifiRates().All()
 	if err != nil {
-		self.api.HttpApi().Respond().Error(w, r, err)
+		ctrl.errRoute.Redirect(w, r, err)
 		return
 	}
 
@@ -37,19 +42,19 @@ func (self *WifiRatesCtrl) Index(w http.ResponseWriter, r *http.Request) {
 		"rates":   rates,
 		"network": network,
 	}
-	self.api.HttpApi().Respond().AdminView(w, r, "rates/index.html", data)
+	ctrl.api.HttpApi().Respond().AdminView(w, r, "rates/index.html", data)
 }
 
-func (self *WifiRatesCtrl) Save(w http.ResponseWriter, r *http.Request) {
+func (ctrl *WifiRatesCtrl) Save(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
 	if err != nil {
-		self.api.HttpApi().Respond().Error(w, r, err)
+		ctrl.errRoute.Redirect(w, r, err)
 		return
 	}
 
-	rates, err := self.api.ConfigApi().WifiRates().All()
+	rates, err := ctrl.api.ConfigApi().WifiRates().All()
 	if err != nil {
-		self.api.HttpApi().Respond().Error(w, r, err)
+		ctrl.errRoute.Redirect(w, r, err)
 		return
 	}
 
@@ -75,7 +80,7 @@ func (self *WifiRatesCtrl) Save(w http.ResponseWriter, r *http.Request) {
 
 	ratesData, err := formToRates(formData)
 	if err != nil {
-		self.api.HttpApi().Respond().Error(w, r, err)
+		ctrl.errRoute.Redirect(w, r, err)
 		return
 	}
 
@@ -107,21 +112,21 @@ func (self *WifiRatesCtrl) Save(w http.ResponseWriter, r *http.Request) {
 
 	log.Println("Network: ", network)
 
-	_, err = self.api.ConfigApi().WifiRates().Write(newRates)
+	_, err = ctrl.api.ConfigApi().WifiRates().Write(newRates)
 	if err != nil {
-		self.api.HttpApi().Respond().Error(w, r, err)
+		ctrl.errRoute.Redirect(w, r, err)
 		return
 	}
 
-	self.api.HttpApi().Respond().SetFlashMsg(w, flash.Success, "Wifi rate saved successfully.")
-	http.Redirect(w, r, self.api.HttpApi().Router().UrlForRoute(names.RouteAdminRatesIndex), http.StatusSeeOther)
+	flash.SetFlashMsg(w, flash.Success, "Wifi rate saved successfully.")
+	http.Redirect(w, r, ctrl.indexUrl, http.StatusSeeOther)
 }
 
-func (self *WifiRatesCtrl) Delete(w http.ResponseWriter, r *http.Request) {
-	uuid := self.api.HttpApi().MuxVars(r)["uuid"]
-	rates, err := self.api.ConfigApi().WifiRates().All()
+func (ctrl *WifiRatesCtrl) Delete(w http.ResponseWriter, r *http.Request) {
+	uuid := ctrl.api.HttpApi().MuxVars(r)["uuid"]
+	rates, err := ctrl.api.ConfigApi().WifiRates().All()
 	if err != nil {
-		self.api.HttpApi().Respond().Error(w, r, err)
+		ctrl.errRoute.Redirect(w, r, err)
 		return
 	}
 
@@ -129,15 +134,14 @@ func (self *WifiRatesCtrl) Delete(w http.ResponseWriter, r *http.Request) {
 		return r.Uuid != uuid
 	})
 
-	_, err = self.api.ConfigApi().WifiRates().Write(rates)
+	_, err = ctrl.api.ConfigApi().WifiRates().Write(rates)
 	if err != nil {
-		self.api.HttpApi().Respond().Error(w, r, err)
+		ctrl.errRoute.Redirect(w, r, err)
 		return
 	}
 
-	self.api.HttpApi().Respond().SetFlashMsg(w, flash.Info, "Wifi rate deleted successfully.")
-	ratesUrl := self.api.HttpApi().Router().UrlForRoute(names.RouteAdminRatesIndex)
-	http.Redirect(w, r, ratesUrl, http.StatusSeeOther)
+	flash.SetFlashMsg(w, flash.Info, "Wifi rate deleted successfully.")
+	http.Redirect(w, r, ctrl.indexUrl, http.StatusSeeOther)
 }
 
 func findRate(rates []*config.WifiRate, uuid string) *config.WifiRate {

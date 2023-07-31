@@ -7,66 +7,73 @@ import (
 
 	"github.com/flarehotspot/sdk/api/models"
 	"github.com/flarehotspot/sdk/api/plugin"
+	"github.com/flarehotspot/sdk/utils/errutil"
 	"github.com/flarehotspot/sdk/utils/flash"
 )
 
 type PaymentCtrl struct {
-	api plugin.IPluginApi
+	api      plugin.IPluginApi
+	errRoute *errutil.ErrRedirect
 }
 
-func (self *PaymentCtrl) PaymentRecevied(w http.ResponseWriter, r *http.Request) {
-	info, err := self.api.PaymentsApi().ParsePaymentInfo(r)
+func NewPaymentCtrl(api plugin.IPluginApi) *PaymentCtrl {
+	errRoute := errutil.NewErrRedirect("/")
+	return &PaymentCtrl{api, errRoute}
+}
+
+func (ctrl *PaymentCtrl) PaymentRecevied(w http.ResponseWriter, r *http.Request) {
+	info, err := ctrl.api.PaymentsApi().ParsePaymentInfo(r)
 	if err != nil {
 		log.Println(err)
-		self.api.HttpApi().Respond().Error(w, r, err)
+		ctrl.errRoute.Redirect(w, r, err)
 		return
 	}
 
 	ctx := r.Context()
-	tx, err := self.api.Db().BeginTx(ctx, nil)
+	tx, err := ctrl.api.Db().BeginTx(ctx, nil)
 	if err != nil {
-		self.api.HttpApi().Respond().Error(w, r, err)
+		ctrl.errRoute.Redirect(w, r, err)
 		return
 	}
 	defer tx.Rollback()
 
-	clnt, err := self.api.ClientReg().CurrentClient(r)
+	clnt, err := ctrl.api.ClientReg().CurrentClient(r)
 	if err != nil {
-		self.api.HttpApi().Respond().Error(w, r, err)
+		ctrl.errRoute.Redirect(w, r, err)
 		return
 	}
 
 	amount, err := info.Purchase.PaymentsTotalTx(tx, ctx)
 	if err != nil {
-		self.api.HttpApi().Respond().Error(w, r, err)
+		ctrl.errRoute.Redirect(w, r, err)
 		return
 	}
 
 	devId := clnt.Id()
 	t := models.SessionTypeTime.ToUint8()
 
-	result, err := self.api.ConfigApi().WifiRates().ComputeSession(clnt.IpAddr(), amount, t)
+	result, err := ctrl.api.ConfigApi().WifiRates().ComputeSession(clnt.IpAddr(), amount, t)
 	if err != nil {
-		self.api.HttpApi().Respond().Error(w, r, err)
+		ctrl.errRoute.Redirect(w, r, err)
 		return
 	}
 
-	net, err := self.api.NetworkApi().FindByIp(clnt.IpAddr())
+	net, err := ctrl.api.NetworkApi().FindByIp(clnt.IpAddr())
 	if err != nil {
-		self.api.HttpApi().Respond().Error(w, r, err)
+		ctrl.errRoute.Redirect(w, r, err)
 		return
 	}
 
-	speed, ok := self.api.ConfigApi().Bandwidth().GetConfig(net.Ifname())
+	speed, ok := ctrl.api.ConfigApi().Bandwidth().GetConfig(net.Ifname())
 	if !ok {
 		err = errors.New("unable to get bandwidth config for " + net.Ifname())
-		self.api.HttpApi().Respond().Error(w, r, err)
+		ctrl.errRoute.Redirect(w, r, err)
 		return
 	}
 
 	minutes := result.TimeMins
 	mbytes := result.DataMbytes
-	exp := self.api.ConfigApi().Sessions().ComputeExpDays(minutes, mbytes)
+	exp := ctrl.api.ConfigApi().Sessions().ComputeExpDays(minutes, mbytes)
 	var downMbits uint
 	var upMbits uint
 
@@ -78,31 +85,27 @@ func (self *PaymentCtrl) PaymentRecevied(w http.ResponseWriter, r *http.Request)
 		upMbits = speed.UserUpMbits
 	}
 
-	_, err = self.api.Models().Session().CreateTx(tx, ctx, devId, t, minutes, float64(mbytes), &exp, downMbits, upMbits)
+	_, err = ctrl.api.Models().Session().CreateTx(tx, ctx, devId, t, minutes, float64(mbytes), &exp, downMbits, upMbits)
 	if err != nil {
 		log.Println("Error creating session: ", err)
-		self.api.HttpApi().Respond().Error(w, r, err)
+		ctrl.errRoute.Redirect(w, r, err)
 		return
 	}
 
 	err = info.Purchase.Confirm(r.Context())
 	if err != nil {
 		log.Println(err)
-		self.api.HttpApi().Respond().Error(w, r, err)
+		ctrl.errRoute.Redirect(w, r, err)
 		return
 	}
 
 	err = tx.Commit()
 	if err != nil {
-		self.api.HttpApi().Respond().Error(w, r, err)
+		ctrl.errRoute.Redirect(w, r, err)
 		return
 	}
 
 	log.Printf("Payment Received: \n%+v", info.Purchase)
-	self.api.HttpApi().Respond().SetFlashMsg(w, flash.Success, "Session created successfully.")
+	flash.SetFlashMsg(w, flash.Success, "Session created successfully.")
 	http.Redirect(w, r, "/", http.StatusSeeOther)
-}
-
-func NewPaymentCtrl(api plugin.IPluginApi) *PaymentCtrl {
-	return &PaymentCtrl{api}
 }
