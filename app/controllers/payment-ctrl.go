@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"errors"
 	"log"
 	"net/http"
 
@@ -50,8 +51,15 @@ func (self *PaymentCtrl) PaymentRecevied(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	speed, err := self.api.ConfigApi().SpeedLimiter().FindByNet(clnt.IpAddr())
+	net, err := self.api.NetworkApi().FindByIp(clnt.IpAddr())
 	if err != nil {
+		self.api.HttpApi().Respond().Error(w, r, err)
+		return
+	}
+
+	speed, ok := self.api.ConfigApi().Bandwidth().GetConfig(net.Ifname())
+	if !ok {
+		err = errors.New("unable to get bandwidth config for " + net.Ifname())
 		self.api.HttpApi().Respond().Error(w, r, err)
 		return
 	}
