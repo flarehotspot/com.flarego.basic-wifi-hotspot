@@ -15,21 +15,17 @@ import (
 )
 
 type WifiRatesCtrl struct {
-	api      plugin.IPluginApi
-	indexUrl string
-	errRoute *errutil.ErrRedirect
+	api plugin.IPluginApi
 }
 
 func NewWifiRatesCtrl(api plugin.IPluginApi) *WifiRatesCtrl {
-	indexUrl := api.HttpApi().Router().UrlForRoute(names.RouteAdminRatesIndex)
-	errRoute := errutil.NewErrRedirect(indexUrl)
-	return &WifiRatesCtrl{api, indexUrl, errRoute}
+	return &WifiRatesCtrl{api}
 }
 
 func (ctrl *WifiRatesCtrl) Index(w http.ResponseWriter, r *http.Request) {
 	rates, err := ctrl.api.ConfigApi().WifiRates().All()
 	if err != nil {
-		ctrl.errRoute.Redirect(w, r, err)
+		ctrl.Error(w, r, err)
 		return
 	}
 
@@ -48,13 +44,13 @@ func (ctrl *WifiRatesCtrl) Index(w http.ResponseWriter, r *http.Request) {
 func (ctrl *WifiRatesCtrl) Save(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
 	if err != nil {
-		ctrl.errRoute.Redirect(w, r, err)
+		ctrl.Error(w, r, err)
 		return
 	}
 
 	rates, err := ctrl.api.ConfigApi().WifiRates().All()
 	if err != nil {
-		ctrl.errRoute.Redirect(w, r, err)
+		ctrl.Error(w, r, err)
 		return
 	}
 
@@ -80,7 +76,7 @@ func (ctrl *WifiRatesCtrl) Save(w http.ResponseWriter, r *http.Request) {
 
 	ratesData, err := formToRates(formData)
 	if err != nil {
-		ctrl.errRoute.Redirect(w, r, err)
+		ctrl.Error(w, r, err)
 		return
 	}
 
@@ -114,19 +110,19 @@ func (ctrl *WifiRatesCtrl) Save(w http.ResponseWriter, r *http.Request) {
 
 	_, err = ctrl.api.ConfigApi().WifiRates().Write(newRates)
 	if err != nil {
-		ctrl.errRoute.Redirect(w, r, err)
+		ctrl.Error(w, r, err)
 		return
 	}
 
 	flash.SetFlashMsg(w, flash.Success, "Wifi rate saved successfully.")
-	http.Redirect(w, r, ctrl.indexUrl, http.StatusSeeOther)
+	http.Redirect(w, r, ctrl.indexUrl(), http.StatusSeeOther)
 }
 
 func (ctrl *WifiRatesCtrl) Delete(w http.ResponseWriter, r *http.Request) {
 	uuid := ctrl.api.HttpApi().MuxVars(r)["uuid"]
 	rates, err := ctrl.api.ConfigApi().WifiRates().All()
 	if err != nil {
-		ctrl.errRoute.Redirect(w, r, err)
+		ctrl.Error(w, r, err)
 		return
 	}
 
@@ -136,12 +132,21 @@ func (ctrl *WifiRatesCtrl) Delete(w http.ResponseWriter, r *http.Request) {
 
 	_, err = ctrl.api.ConfigApi().WifiRates().Write(rates)
 	if err != nil {
-		ctrl.errRoute.Redirect(w, r, err)
+		ctrl.Error(w, r, err)
 		return
 	}
 
 	flash.SetFlashMsg(w, flash.Info, "Wifi rate deleted successfully.")
-	http.Redirect(w, r, ctrl.indexUrl, http.StatusSeeOther)
+	http.Redirect(w, r, ctrl.indexUrl(), http.StatusSeeOther)
+}
+
+func (ctrl *WifiRatesCtrl) Error(w http.ResponseWriter, r *http.Request, err error) {
+	errRoute := errutil.NewErrRedirect(ctrl.indexUrl())
+	errRoute.Redirect(w, r, err)
+}
+
+func (ctrl *WifiRatesCtrl) indexUrl() string {
+	return ctrl.api.HttpApi().Router().UrlForRoute(names.RouteAdminRatesIndex)
 }
 
 func findRate(rates []*config.WifiRate, uuid string) *config.WifiRate {
