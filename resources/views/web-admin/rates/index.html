@@ -58,7 +58,7 @@
               />
             </div>
 
-            <div class="col-md-auto d-flex align-items-end">
+            <div class="col-md-auto d-flex flex-row-reverse align-items-end mt-2">
               <a
                 href='{{ $h.UrlForRoute "admin:rates:delete"  "uuid"  $rate.Uuid }}'
                 class="btn btn-danger"
@@ -112,16 +112,16 @@
               />
             </div>
 
-            <div class="col-md-auto d-flex align-items-end">
+            <div class="col-md-auto d-flex flex-row-reverse align-items-end mt-2">
               <a id="cancel-new-rate" class="btn btn-warning">Cancel</a>
             </div>
           </div>
           
-          <div class="container mt-4 text-end">
-            <a id="new-rate-btn" href="javascript:" class="btn btn-primary"
+          <div class="container mt-2 text-end">
+            <a id="new-rate-btn" href="javascript:" class="btn btn-primary mt-2"
               >New Rate</a
             >
-            <button type="submit" class="btn btn-success">Save</button>
+            <button type="submit" class="btn btn-success mt-2">Save</button>
           </div>
         </form>
       </div>
