@@ -3,13 +3,7 @@
 
 <div class="container">
   <div class="card mt-4 mb-2">
-    <div class="card-header">
-      <div
-        class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3"
-      >
-        <h6 class="text-capitalize ps-3">Wifi Rates List</h6>
-      </div>
-    </div>
+    <div class="card-header">Wifi Rates List</div>
     <div class="card-body">
       <div class="container-fluid">
         <form
@@ -17,7 +11,7 @@
           action='{{ $h.UrlForRoute "admin:rates:save" }}'
         >
           <div class="row my-2">
-            <div class="col col-4">
+            <div class="col col-sm-4">
               <label class="form-label">Network</label>
               <input
                 class="form-control ps-2 border"
@@ -64,7 +58,7 @@
               />
             </div>
 
-            <div class="col d-flex align-items-end">
+            <div class="col-md-auto d-flex align-items-end">
               <a
                 href='{{ $h.UrlForRoute "admin:rates:delete"  "uuid"  $rate.Uuid }}'
                 class="btn btn-danger"
@@ -118,13 +112,12 @@
               />
             </div>
 
-            <div class="col d-flex align-items-end">
+            <div class="col-md-auto d-flex align-items-end">
               <a id="cancel-new-rate" class="btn btn-warning">Cancel</a>
             </div>
           </div>
-
-          <hr />
-          <div class="container">
+          
+          <div class="container mt-4 text-end">
             <a id="new-rate-btn" href="javascript:" class="btn btn-primary"
               >New Rate</a
             >
