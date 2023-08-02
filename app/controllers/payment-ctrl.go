@@ -74,18 +74,8 @@ func (ctrl *PaymentCtrl) PaymentRecevied(w http.ResponseWriter, r *http.Request)
 	minutes := result.TimeMins
 	mbytes := result.DataMbytes
 	exp := ctrl.api.ConfigApi().Sessions().ComputeExpDays(minutes, mbytes)
-	var downMbits uint
-	var upMbits uint
 
-	if speed.UseGlobal {
-		downMbits = speed.GlobalDownMbits
-		upMbits = speed.GlobalUpMbits
-	} else {
-		downMbits = speed.UserDownMbits
-		upMbits = speed.UserUpMbits
-	}
-
-	_, err = ctrl.api.Models().Session().CreateTx(tx, ctx, devId, t, minutes, float64(mbytes), &exp, downMbits, upMbits)
+	_, err = ctrl.api.Models().Session().CreateTx(tx, ctx, devId, t, minutes, float64(mbytes), &exp, speed.UserDownMbits, speed.UserUpMbits, speed.UseGlobal)
 	if err != nil {
 		log.Println("Error creating session: ", err)
 		ctrl.errRoute.Redirect(w, r, err)
