@@ -50,7 +50,7 @@ func (ctrl *PaymentCtrl) PaymentRecevied(w http.ResponseWriter, r *http.Request)
 	}
 
 	devId := clnt.Id()
-	t := models.SessionTypeTime.ToUint8()
+	t := models.SessionTypeTime
 
 	result, err := ctrl.api.ConfigApi().WifiRates().ComputeSession(clnt.IpAddr(), amount, t)
 	if err != nil {
@@ -75,7 +75,7 @@ func (ctrl *PaymentCtrl) PaymentRecevied(w http.ResponseWriter, r *http.Request)
 	mbytes := result.DataMbytes
 	exp := ctrl.api.ConfigApi().Sessions().ComputeExpDays(minutes, mbytes)
 
-	_, err = ctrl.api.Models().Session().CreateTx(tx, ctx, devId, t, minutes, float64(mbytes), &exp, speed.UserDownMbits, speed.UserUpMbits, speed.UseGlobal)
+	_, err = ctrl.api.Models().Session().CreateTx(tx, ctx, devId, t.ToUint8(), minutes, float64(mbytes), &exp, speed.UserDownMbits, speed.UserUpMbits, speed.UseGlobal)
 	if err != nil {
 		log.Println("Error creating session: ", err)
 		ctrl.errRoute.Redirect(w, r, err)
