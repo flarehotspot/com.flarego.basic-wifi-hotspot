@@ -14,15 +14,15 @@ import (
 	"github.com/flarehotspot/sdk/utils/strings"
 )
 
-type WifiRatesCtrl struct {
+type SessionRatesCtrl struct {
 	api plugin.IPluginApi
 }
 
-func NewWifiRatesCtrl(api plugin.IPluginApi) *WifiRatesCtrl {
-	return &WifiRatesCtrl{api}
+func NewWifiRatesCtrl(api plugin.IPluginApi) *SessionRatesCtrl {
+	return &SessionRatesCtrl{api}
 }
 
-func (ctrl *WifiRatesCtrl) Index(w http.ResponseWriter, r *http.Request) {
+func (ctrl *SessionRatesCtrl) Index(w http.ResponseWriter, r *http.Request) {
 	rates, err := ctrl.api.ConfigApi().WifiRates().All()
 	if err != nil {
 		ctrl.Error(w, r, err)
@@ -41,7 +41,7 @@ func (ctrl *WifiRatesCtrl) Index(w http.ResponseWriter, r *http.Request) {
 	ctrl.api.HttpApi().Respond().AdminView(w, r, "rates/index.html", data)
 }
 
-func (ctrl *WifiRatesCtrl) Save(w http.ResponseWriter, r *http.Request) {
+func (ctrl *SessionRatesCtrl) Save(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
 	if err != nil {
 		ctrl.Error(w, r, err)
@@ -80,11 +80,11 @@ func (ctrl *WifiRatesCtrl) Save(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	newRates := []*config.WifiRate{}
+	newRates := []*config.SessionRate{}
 	for _, newRate := range ratesData {
 		prevRate := findRate(rates, newRate.Uuid)
 		if prevRate != nil {
-			rate := &config.WifiRate{
+			rate := &config.SessionRate{
 				Uuid:       prevRate.Uuid,
 				Network:    network,
 				Amount:     newRate.Amount,
@@ -94,7 +94,7 @@ func (ctrl *WifiRatesCtrl) Save(w http.ResponseWriter, r *http.Request) {
 			newRates = append(newRates, rate)
 		} else {
 			if createRate {
-				rate := &config.WifiRate{
+				rate := &config.SessionRate{
 					Uuid:       strings.Rand(8),
 					Network:    network,
 					Amount:     newRate.Amount,
@@ -118,7 +118,7 @@ func (ctrl *WifiRatesCtrl) Save(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, ctrl.indexUrl(), http.StatusSeeOther)
 }
 
-func (ctrl *WifiRatesCtrl) Delete(w http.ResponseWriter, r *http.Request) {
+func (ctrl *SessionRatesCtrl) Delete(w http.ResponseWriter, r *http.Request) {
 	uuid := ctrl.api.HttpApi().MuxVars(r)["uuid"]
 	rates, err := ctrl.api.ConfigApi().WifiRates().All()
 	if err != nil {
@@ -126,7 +126,7 @@ func (ctrl *WifiRatesCtrl) Delete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	rates = slices.Filter(rates, func(r *config.WifiRate) bool {
+	rates = slices.Filter(rates, func(r *config.SessionRate) bool {
 		return r.Uuid != uuid
 	})
 
@@ -140,16 +140,16 @@ func (ctrl *WifiRatesCtrl) Delete(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, ctrl.indexUrl(), http.StatusSeeOther)
 }
 
-func (ctrl *WifiRatesCtrl) Error(w http.ResponseWriter, r *http.Request, err error) {
+func (ctrl *SessionRatesCtrl) Error(w http.ResponseWriter, r *http.Request, err error) {
 	errRoute := errutil.NewErrRedirect(ctrl.indexUrl())
 	errRoute.Redirect(w, r, err)
 }
 
-func (ctrl *WifiRatesCtrl) indexUrl() string {
+func (ctrl *SessionRatesCtrl) indexUrl() string {
 	return ctrl.api.HttpApi().Router().UrlForRoute(names.RouteAdminRatesIndex)
 }
 
-func findRate(rates []*config.WifiRate, uuid string) *config.WifiRate {
+func findRate(rates []*config.SessionRate, uuid string) *config.SessionRate {
 	for _, r := range rates {
 		if r.Uuid == uuid {
 			return r
@@ -158,8 +158,8 @@ func findRate(rates []*config.WifiRate, uuid string) *config.WifiRate {
 	return nil
 }
 
-func formToRates(formData []map[string]string) ([]*config.WifiRate, error) {
-	rates := []*config.WifiRate{}
+func formToRates(formData []map[string]string) ([]*config.SessionRate, error) {
+	rates := []*config.SessionRate{}
 	for _, data := range formData {
 		uuid := data["uuid"]
 		amount, err := strconv.ParseFloat(data["amount"], 64)
@@ -177,7 +177,7 @@ func formToRates(formData []map[string]string) ([]*config.WifiRate, error) {
 			return nil, err
 		}
 
-		rate := &config.WifiRate{
+		rate := &config.SessionRate{
 			Uuid:       uuid,
 			Amount:     amount,
 			TimeMins:   uint(mins),
