@@ -30,7 +30,7 @@ func (ctrl *PaymentCtrl) PaymentRecevied(w http.ResponseWriter, r *http.Request)
 	}
 
 	ctx := r.Context()
-	tx, err := ctrl.api.Db().BeginTx(ctx, nil)
+	tx, err := ctrl.api.DbApi().BeginTx(ctx, nil)
 	if err != nil {
 		ctrl.errRoute.Redirect(w, r, err)
 		return
@@ -75,7 +75,7 @@ func (ctrl *PaymentCtrl) PaymentRecevied(w http.ResponseWriter, r *http.Request)
 	mbytes := result.DataMbytes
 	exp := ctrl.api.ConfigApi().Sessions().ComputeExpDays(minutes, mbytes)
 
-	_, err = ctrl.api.Models().Session().CreateTx(tx, ctx, devId, t.ToUint8(), minutes, float64(mbytes), &exp, speed.UserDownMbits, speed.UserUpMbits, speed.UseGlobal)
+	_, err = ctrl.api.ModelsApi().Session().CreateTx(tx, ctx, devId, t.ToUint8(), minutes, float64(mbytes), &exp, speed.UserDownMbits, speed.UserUpMbits, speed.UseGlobal)
 	if err != nil {
 		log.Println("Error creating session: ", err)
 		ctrl.errRoute.Redirect(w, r, err)
