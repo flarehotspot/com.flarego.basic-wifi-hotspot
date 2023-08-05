@@ -6,18 +6,18 @@ import (
 	"net/http"
 
 	"github.com/flarehotspot/com.flarego.basic-wifi-hotspot/app/routes/names"
+	"github.com/flarehotspot/sdk/v1.0.0/api"
 	"github.com/flarehotspot/sdk/v1.0.0/api/connmgr"
-	"github.com/flarehotspot/sdk/v1.0.0/api/plugin"
 	"github.com/flarehotspot/sdk/v1.0.0/utils/contexts"
 )
 
 type SessionBtnNav struct {
-	api plugin.IPluginApi
+	api api.IPluginApi
 	r   *http.Request
 }
 
-func NewSessionBtnNav(api plugin.IPluginApi, r *http.Request) *SessionBtnNav {
-	return &SessionBtnNav{api, r}
+func NewSessionBtnNav(API api.IPluginApi, r *http.Request) *SessionBtnNav {
+	return &SessionBtnNav{API, r}
 }
 
 func (self *SessionBtnNav) IconPath() string {

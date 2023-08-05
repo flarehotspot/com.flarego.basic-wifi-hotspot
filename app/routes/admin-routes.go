@@ -3,12 +3,12 @@ package routes
 import (
 	"github.com/flarehotspot/com.flarego.basic-wifi-hotspot/app/controllers"
 	"github.com/flarehotspot/com.flarego.basic-wifi-hotspot/app/routes/names"
-	"github.com/flarehotspot/sdk/v1.0.0/api/plugin"
+	"github.com/flarehotspot/sdk/v1.0.0/api"
 )
 
-func AdminRoutes(api plugin.IPluginApi) {
-	rtr := api.HttpApi().Router().AdminRouter()
-	ratesCtrl := controllers.NewWifiRatesCtrl(api)
+func AdminRoutes(API api.IPluginApi) {
+	rtr := API.HttpApi().Router().AdminRouter()
+	ratesCtrl := controllers.NewWifiRatesCtrl(API)
 
 	rtr.Get("/rates", ratesCtrl.Index).Name(names.RouteAdminRatesIndex)
 	rtr.Post("/rates/save", ratesCtrl.Save).Name(names.RouteAdminRatesSave)
