@@ -6,12 +6,12 @@ import (
 	"strconv"
 
 	"github.com/flarehotspot/com.flarego.basic-wifi-hotspot/app/routes/names"
-	"github.com/flarehotspot/sdk/v1/api"
-	"github.com/flarehotspot/sdk/v1/api/config"
-	"github.com/flarehotspot/sdk/v1/utils/errutil"
-	"github.com/flarehotspot/sdk/v1/utils/flash"
-	"github.com/flarehotspot/sdk/v1/utils/slices"
-	"github.com/flarehotspot/sdk/v1/utils/strings"
+	"github.com/flarehotspot/sdk/v1.0.0/api"
+	"github.com/flarehotspot/sdk/v1.0.0/api/config"
+	"github.com/flarehotspot/sdk/v1.0.0/utils/errutil"
+	"github.com/flarehotspot/sdk/v1.0.0/utils/flash"
+	"github.com/flarehotspot/sdk/v1.0.0/utils/slices"
+	"github.com/flarehotspot/sdk/v1.0.0/utils/strings"
 )
 
 type SessionRatesCtrl struct {

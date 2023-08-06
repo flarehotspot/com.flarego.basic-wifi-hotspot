@@ -8,7 +8,7 @@ import (
 	"github.com/flarehotspot/com.flarego.basic-wifi-hotspot/app/routes"
 	"github.com/flarehotspot/com.flarego.basic-wifi-hotspot/app/web/navs"
 	"github.com/flarehotspot/sdk"
-	"github.com/flarehotspot/sdk/v1/api"
+	"github.com/flarehotspot/sdk/v1.0.0/api"
 )
 
 func Init(_sdk sdk.SDK) {
