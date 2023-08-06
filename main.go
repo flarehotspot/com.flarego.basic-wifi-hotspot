@@ -3,7 +3,7 @@
 package main
 
 import (
-	"github.com/flarehotspot/sdk/v1.0.0/api/plugin"
+	"github.com/flarehotspot/sdk/api/plugin"
 	"github.com/flarehotspot/com.flarego.basic-wifi-hotspot/app/routes"
 	"github.com/flarehotspot/com.flarego.basic-wifi-hotspot/app/web/navs"
 )

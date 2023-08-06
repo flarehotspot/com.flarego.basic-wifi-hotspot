@@ -3,8 +3,8 @@ package navs
 import (
 	"net/http"
 
-	"github.com/flarehotspot/sdk/v1.0.0/api/http/navigation"
-	"github.com/flarehotspot/sdk/v1.0.0/api/plugin"
+	"github.com/flarehotspot/sdk/api/http/navigation"
+	"github.com/flarehotspot/sdk/api/plugin"
 	"github.com/flarehotspot/com.flarego.basic-wifi-hotspot/app/routes/names"
 )
 
