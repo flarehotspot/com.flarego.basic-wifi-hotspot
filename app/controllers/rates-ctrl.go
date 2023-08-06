@@ -6,8 +6,8 @@ import (
 	"strconv"
 
 	"github.com/flarehotspot/com.flarego.basic-wifi-hotspot/app/routes/names"
-	"github.com/flarehotspot/sdk/v1.0.0/api"
 	"github.com/flarehotspot/sdk/v1.0.0/api/config"
+	"github.com/flarehotspot/sdk/v1.0.0/api/plugin"
 	"github.com/flarehotspot/sdk/v1.0.0/utils/errutil"
 	"github.com/flarehotspot/sdk/v1.0.0/utils/flash"
 	"github.com/flarehotspot/sdk/v1.0.0/utils/slices"
@@ -15,10 +15,10 @@ import (
 )
 
 type SessionRatesCtrl struct {
-	api api.IPluginApi
+	api plugin.IPluginApi
 }
 
-func NewWifiRatesCtrl(api api.IPluginApi) *SessionRatesCtrl {
+func NewWifiRatesCtrl(api plugin.IPluginApi) *SessionRatesCtrl {
 	return &SessionRatesCtrl{api}
 }
 

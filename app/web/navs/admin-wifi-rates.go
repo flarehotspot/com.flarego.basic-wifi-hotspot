@@ -3,19 +3,19 @@ package navs
 import (
 	"net/http"
 
-	"github.com/flarehotspot/com.flarego.basic-wifi-hotspot/app/routes/names"
-	"github.com/flarehotspot/sdk/v1.0.0/api"
 	"github.com/flarehotspot/sdk/v1.0.0/api/http/navigation"
+	"github.com/flarehotspot/sdk/v1.0.0/api/plugin"
+	"github.com/flarehotspot/com.flarego.basic-wifi-hotspot/app/routes/names"
 )
 
-func AdminWifiRates(API api.IPluginApi) {
+func AdminWifiRates(api plugin.IPluginApi) {
 	wifiRatesNav := &AdminNav{
 		category: navigation.CategoryPayments,
 		text:     "Wifi Rates",
-		href:     API.HttpApi().Router().UrlForRoute(names.RouteAdminRatesIndex),
+		href:     api.HttpApi().Router().UrlForRoute(names.RouteAdminRatesIndex),
 	}
 
-	API.NavApi().AdminNavsFn(func(r *http.Request) []navigation.IAdminNavItem {
+	api.NavApi().AdminNavsFn(func(r *http.Request) []navigation.IAdminNavItem {
 		navs := []navigation.IAdminNavItem{}
 		navs = append(navs, wifiRatesNav)
 		return navs
