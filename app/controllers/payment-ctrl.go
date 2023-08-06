@@ -5,10 +5,10 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/flarehotspot/sdk/v1.0.0/api"
-	"github.com/flarehotspot/sdk/v1.0.0/api/models"
-	"github.com/flarehotspot/sdk/v1.0.0/utils/errutil"
-	"github.com/flarehotspot/sdk/v1.0.0/utils/flash"
+	"github.com/flarehotspot/sdk/v1/api"
+	"github.com/flarehotspot/sdk/v1/api/models"
+	"github.com/flarehotspot/sdk/v1/utils/errutil"
+	"github.com/flarehotspot/sdk/v1/utils/flash"
 )
 
 type PaymentCtrl struct {

@@ -3,9 +3,9 @@ package utils
 // import (
 	// "net/http"
 
-	// "github.com/flarehotspot/sdk/v1.0.0/api/connmgr"
-	// "github.com/flarehotspot/sdk/v1.0.0/api/plugin"
-	// "github.com/flarehotspot/sdk/v1.0.0/utils/http/req"
+	// "github.com/flarehotspot/sdk/v1/api/connmgr"
+	// "github.com/flarehotspot/sdk/v1/api/plugin"
+	// "github.com/flarehotspot/sdk/v1/utils/http/req"
 // )
 
 // func MakeSession(api plugin.IPluginApi, clnt connmgr.IClientDevice, amount float64) error {

@@ -6,12 +6,12 @@ import (
 	"net/http"
 
 	"github.com/flarehotspot/com.flarego.basic-wifi-hotspot/app/routes/names"
-	"github.com/flarehotspot/sdk/v1.0.0/api"
-	"github.com/flarehotspot/sdk/v1.0.0/api/connmgr"
-	"github.com/flarehotspot/sdk/v1.0.0/api/payments"
-	"github.com/flarehotspot/sdk/v1.0.0/utils/contexts"
-	"github.com/flarehotspot/sdk/v1.0.0/utils/errutil"
-	"github.com/flarehotspot/sdk/v1.0.0/utils/flash"
+	"github.com/flarehotspot/sdk/v1/api"
+	"github.com/flarehotspot/sdk/v1/api/connmgr"
+	"github.com/flarehotspot/sdk/v1/api/payments"
+	"github.com/flarehotspot/sdk/v1/utils/contexts"
+	"github.com/flarehotspot/sdk/v1/utils/errutil"
+	"github.com/flarehotspot/sdk/v1/utils/flash"
 )
 
 type PortalCtrl struct {

@@ -3,8 +3,8 @@ package routes
 import (
 	"github.com/flarehotspot/com.flarego.basic-wifi-hotspot/app/controllers"
 	"github.com/flarehotspot/com.flarego.basic-wifi-hotspot/app/routes/names"
-	"github.com/flarehotspot/sdk/v1.0.0/api"
-	"github.com/flarehotspot/sdk/v1.0.0/api/http/router"
+	"github.com/flarehotspot/sdk/v1/api"
+	"github.com/flarehotspot/sdk/v1/api/http/router"
 )
 
 func PortalRoutes(API api.IPluginApi) {
