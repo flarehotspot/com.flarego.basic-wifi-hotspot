@@ -2,10 +2,10 @@
 {{ $h := .Helpers }}
 
 <div class="container">
-  <div class="card mt-4 mb-2">
+  <div class="card">
     <div class="card-header">Wifi Rates List</div>
     <div class="card-body">
-      <div class="container-fluid">
+      <div class="container">
         <form
           method="POST"
           action='{{ $h.UrlForRoute "admin:rates:save" }}'
