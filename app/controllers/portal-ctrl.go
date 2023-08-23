@@ -7,20 +7,20 @@ import (
 
 	"github.com/flarehotspot/com.flarego.basic-wifi-hotspot/app/routes/names"
 	"github.com/flarehotspot/sdk/api/connmgr"
+	"github.com/flarehotspot/sdk/api/http/response"
 	"github.com/flarehotspot/sdk/api/payments"
 	"github.com/flarehotspot/sdk/api/plugin"
 	"github.com/flarehotspot/sdk/utils/contexts"
-	"github.com/flarehotspot/sdk/utils/errutil"
 	"github.com/flarehotspot/sdk/utils/flash"
 )
 
 type PortalCtrl struct {
 	api      plugin.IPluginApi
-	errRoute *errutil.ErrRedirect
+	errRoute response.IErrorRedirect
 }
 
 func NewPortalCtrl(api plugin.IPluginApi) *PortalCtrl {
-	errRoute := errutil.NewErrRedirect("/")
+	errRoute := api.HttpApi().Respond().NewErrUrl("/")
 	return &PortalCtrl{api, errRoute}
 }
 

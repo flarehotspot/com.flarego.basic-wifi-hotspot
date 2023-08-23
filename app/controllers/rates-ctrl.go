@@ -8,7 +8,6 @@ import (
 	"github.com/flarehotspot/com.flarego.basic-wifi-hotspot/app/routes/names"
 	"github.com/flarehotspot/sdk/api/config"
 	"github.com/flarehotspot/sdk/api/plugin"
-	"github.com/flarehotspot/sdk/utils/errutil"
 	"github.com/flarehotspot/sdk/utils/flash"
 	"github.com/flarehotspot/sdk/utils/slices"
 	"github.com/flarehotspot/sdk/utils/strings"
@@ -141,8 +140,8 @@ func (ctrl *SessionRatesCtrl) Delete(w http.ResponseWriter, r *http.Request) {
 }
 
 func (ctrl *SessionRatesCtrl) Error(w http.ResponseWriter, r *http.Request, err error) {
-	errRoute := errutil.NewErrRedirect(ctrl.indexUrl())
-	errRoute.Redirect(w, r, err)
+	e := ctrl.api.HttpApi().Respond().NewErrRoute(names.RouteAdminRatesIndex)
+	e.Redirect(w, r, err)
 }
 
 func (ctrl *SessionRatesCtrl) indexUrl() string {

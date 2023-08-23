@@ -5,19 +5,19 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/flarehotspot/sdk/api/http/response"
 	"github.com/flarehotspot/sdk/api/models"
 	"github.com/flarehotspot/sdk/api/plugin"
-	"github.com/flarehotspot/sdk/utils/errutil"
 	"github.com/flarehotspot/sdk/utils/flash"
 )
 
 type PaymentCtrl struct {
 	api      plugin.IPluginApi
-	errRoute *errutil.ErrRedirect
+	errRoute response.IErrorRedirect
 }
 
 func NewPaymentCtrl(api plugin.IPluginApi) *PaymentCtrl {
-	errRoute := errutil.NewErrRedirect("/")
+	errRoute := api.HttpApi().Respond().NewErrUrl("/")
 	return &PaymentCtrl{api, errRoute}
 }
 
