@@ -1,6 +1,6 @@
 package navs
 
-import "github.com/flarehotspot/sdk/api/http/navigation"
+import "github.com/flarehotspot/core/sdk/api/http/navigation"
 
 type AdminNav struct {
 	category navigation.INavCategory
