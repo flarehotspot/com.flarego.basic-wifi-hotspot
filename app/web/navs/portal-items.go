@@ -10,8 +10,8 @@ import (
 
 func SetPortalItems(api plugin.IPluginApi) {
 
-	api.HttpApi().VueRouter().PortalRoutes(func(r *http.Request) []*router.VueRoute {
-		return []*router.VueRoute{
+	api.HttpApi().VueRouter().PortalRoutes(func(r *http.Request) []*router.VuePortalRoute {
+		return []*router.VuePortalRoute{
 			{RouteName: "sample", RoutePath: "/sample", ComponentPath: "components/portal/Sample.vue"},
 		}
 	})
