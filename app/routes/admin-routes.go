@@ -7,7 +7,7 @@ import (
 )
 
 func AdminRoutes(api plugin.IPluginApi) {
-	rtr := api.HttpApi().Router().AdminRouter()
+	rtr := api.HttpApi().HttpRouter().AdminRouter()
 	ratesCtrl := controllers.NewWifiRatesCtrl(api)
 
 	rtr.Get("/rates", ratesCtrl.Index).Name(names.RouteAdminRatesIndex)

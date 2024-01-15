@@ -145,7 +145,7 @@ func (ctrl *SessionRatesCtrl) Error(w http.ResponseWriter, r *http.Request, err 
 }
 
 func (ctrl *SessionRatesCtrl) indexUrl() string {
-	return ctrl.api.HttpApi().Router().UrlForRoute(names.RouteAdminRatesIndex)
+	return ctrl.api.HttpApi().HttpRouter().UrlForRoute(names.RouteAdminRatesIndex)
 }
 
 func findRate(rates []*config.SessionRate, uuid string) *config.SessionRate {

@@ -39,7 +39,7 @@ func (ctrl *PortalCtrl) GetInsertCoin(w http.ResponseWriter, r *http.Request) {
 		params := &payments.PurchaseRequest{
 			Items:       []*payments.PurchaseItem{item},
 			VarPrice:    true,
-			CallbackUrl: ctrl.api.HttpApi().Router().UrlForRoute(names.RoutePaymentReceived),
+			CallbackUrl: ctrl.api.HttpApi().HttpRouter().UrlForRoute(names.RoutePaymentReceived),
 		}
 
 		ctrl.api.PaymentsApi().Checkout(w, r, params)

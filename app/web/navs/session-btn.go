@@ -53,11 +53,11 @@ func (self *SessionBtnNav) Href() string {
 
 	if !self.api.ClientMgr().IsConnected(clnt) {
 		if self.canConnect(self.r.Context()) {
-			return self.api.HttpApi().Router().UrlForRoute(names.RouteStartSession)
+			return self.api.HttpApi().HttpRouter().UrlForRoute(names.RouteStartSession)
 		}
 		return "/"
 	} else {
-		return self.api.HttpApi().Router().UrlForRoute(names.RouteStopSession)
+		return self.api.HttpApi().HttpRouter().UrlForRoute(names.RouteStopSession)
 	}
 }
 

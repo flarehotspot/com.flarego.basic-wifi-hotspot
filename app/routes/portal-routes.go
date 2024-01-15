@@ -8,22 +8,22 @@ import (
 )
 
 func PortalRoutes(api plugin.IPluginApi) {
-	rtr := api.HttpApi().Router()
+	rtr := api.HttpApi().HttpRouter()
 	portalCtrl := controllers.NewPortalCtrl(api)
 	paymentsCtrl := controllers.NewPaymentCtrl(api)
 	deviceMw := api.HttpApi().Middlewares().Device()
 
-	rtr.PluginRouter().Group("/portal", func(subrouter router.IRouter) {
+	rtr.PluginRouter().Group("/portal", func(subrouter router.IHttpRouter) {
 		subrouter.Use(deviceMw)
 		subrouter.Get("/insert-coin", portalCtrl.GetInsertCoin).Name(names.RouteInsertCoin)
 	})
 
-	rtr.PluginRouter().Group("/payments", func(subrouter router.IRouter) {
+	rtr.PluginRouter().Group("/payments", func(subrouter router.IHttpRouter) {
 		subrouter.Use(deviceMw)
 		subrouter.Get("/received", paymentsCtrl.PaymentRecevied).Name(names.RoutePaymentReceived)
 	})
 
-	rtr.PluginRouter().Group("/session", func(subrouter router.IRouter) {
+	rtr.PluginRouter().Group("/session", func(subrouter router.IHttpRouter) {
 		subrouter.Use(deviceMw)
 		subrouter.Get("/start", portalCtrl.StartSession).Name(names.RouteStartSession)
 		subrouter.Get("/stop", portalCtrl.StopSession).Name(names.RouteStopSession)

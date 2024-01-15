@@ -1,5 +1,0 @@
----
-name: "WiFi Hotspot"
-package: "com.flarego.basic-wifi-hotspot"
-version: "1.0.0"
-description: "Basic wifi hotspot manager for Flare Hotspot"
