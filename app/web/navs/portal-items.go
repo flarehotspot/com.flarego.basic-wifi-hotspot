@@ -10,15 +10,15 @@ import (
 
 func SetPortalItems(api plugin.IPluginApi) {
 
-	api.HttpApi().VueRouter().PortalRoutes(func(r *http.Request) []*router.VuePortalRoute {
-		return []*router.VuePortalRoute{
+	api.HttpApi().VueRouter().PortalRoutes(func(r *http.Request) []router.VuePortalRoute {
+		return []router.VuePortalRoute{
 			{RouteName: "sample", RoutePath: "/sample", ComponentPath: "components/portal/Sample.vue"},
 		}
 	})
 
-	api.HttpApi().VueRouter().PortalItems(func(r *http.Request) []*router.VuePortalItem {
-		navs := []*router.VuePortalItem{}
-		navs = append(navs, &router.VuePortalItem{
+	api.HttpApi().VueRouter().PortalItems(func(r *http.Request) []router.VuePortalItem {
+		navs := []router.VuePortalItem{}
+		navs = append(navs, router.VuePortalItem{
 			TranslateLabel: "sample",
 			RouteName:      "sample",
 		})
