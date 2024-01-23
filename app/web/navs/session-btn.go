@@ -6,9 +6,9 @@ import (
 	"net/http"
 
 	"github.com/flarehotspot/com.flarego.basic-wifi-hotspot/app/routes/names"
-	"github.com/flarehotspot/core/sdk/api/connmgr"
-	"github.com/flarehotspot/core/sdk/api/plugin"
-	"github.com/flarehotspot/core/sdk/utils/contexts"
+	connmgr "github.com/flarehotspot/core/sdk/api/connmgr"
+	plugin "github.com/flarehotspot/core/sdk/api/plugin"
+	"github.com/flarehotspot/core/sdk/api/http"
 )
 
 type SessionBtnNav struct {
@@ -66,7 +66,7 @@ func (self *SessionBtnNav) client() (connmgr.IClientDevice, error) {
 		return nil, errors.New("Session http request is not initialized.")
 	}
 
-	clntSym := self.r.Context().Value(contexts.ClientCtxKey)
+	clntSym := self.r.Context().Value(sdkhttp.ClientCtxKey)
 	clnt, ok := clntSym.(connmgr.IClientDevice)
 	if !ok {
 		return nil, errors.New("Could not determine client device.")
