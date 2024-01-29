@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	sdkhttp "github.com/flarehotspot/core/sdk/api/http"
+	sdkpayments "github.com/flarehotspot/core/sdk/api/payments"
 	sdkplugin "github.com/flarehotspot/core/sdk/api/plugin"
 )
 
@@ -16,6 +17,21 @@ func SetPortalItems(api sdkplugin.IPluginApi) {
 			RouteName: "portal.insert-coin",
 			RoutePath: "/insert-coin",
 			Component: "portal/InsertCoin.vue",
+			HandlerFunc: func(w http.ResponseWriter, r *http.Request) {
+				p := sdkpayments.PurchaseRequest{
+					Sku:                  "wifi-connection",
+					Name:                 "WiFi Connection",
+					Description:          "Basic Wifi Hotspot",
+					AnyPrice:             true,
+					CallbackVueRouteName: "portal.purchase-callback",
+				}
+				api.PaymentsApi().Checkout(w, r, p)
+			},
+		},
+		{
+			RouteName: "portal.purchase-callback",
+			RoutePath: "/purchase-callback",
+			Component: "portal/PurchaseCallback.vue",
 		},
 	}...)
 
