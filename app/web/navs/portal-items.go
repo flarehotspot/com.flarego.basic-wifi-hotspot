@@ -1,41 +1,60 @@
 package navs
 
-// import (
-// 	"net/http"
+import (
+	"net/http"
 
-// 	"github.com/flarehotspot/core/sdk/api/http/router"
-// 	"github.com/flarehotspot/core/sdk/api/plugin"
-// 	// "github.com/flarehotspot/com.flarego.basic-wifi-hotspot/app/routes/names"
-// )
+	sdkhttp "github.com/flarehotspot/core/sdk/api/http"
+	sdkplugin "github.com/flarehotspot/core/sdk/api/plugin"
+)
 
-// func SetPortalItems(api plugin.IPluginApi) {
+func SetPortalItems(api sdkplugin.IPluginApi) {
 
-// 	api.HttpApi().VueRouter().PortalRoutes(func(r *http.Request) []router.VuePortalRoute {
-// 		return []router.VuePortalRoute{
-// 			{RouteName: "sample", RoutePath: "/sample", ComponentPath: "components/portal/Sample.vue"},
-// 		}
-// 	})
+	vrouter := api.HttpApi().VueRouter()
 
-// 	api.HttpApi().VueRouter().PortalItems(func(r *http.Request) []router.VuePortalItem {
-// 		navs := []router.VuePortalItem{}
-// 		navs = append(navs, router.VuePortalItem{
-// 			TranslateLabel: "sample",
-// 			RouteName:      "sample",
-// 		})
-// 		return navs
-// 	})
+	vrouter.RegisterPortalRoutes([]sdkhttp.VuePortalRoute{
+		{
+			RouteName: "portal.insert-coin",
+			RoutePath: "/insert-coin",
+			Component: "portal/InsertCoin.vue",
+		},
+	}...)
 
-// 	// api.NavApi().PortalNavsFn(func(r *http.Request) []navigation.Portal {
-// 	// 	inscoin := navigation.NewPortalItem("", "Insert Coin", "", api.HttpApi().Router().UrlForRoute(names.RouteInsertCoin))
-// 	// 	navs := []navigation.IPortalItem{inscoin}
+	vrouter.PortalItemsFunc(func(r *http.Request) []sdkhttp.VuePortalItem {
+		navs := []sdkhttp.VuePortalItem{}
+		navs = append(navs, sdkhttp.VuePortalItem{
+			IconPath:       "images/wifi-logo.png",
+			TranslateLabel: "insert_coin",
+			RouteName:      "portal.insert-coin",
+		})
+		return navs
+	})
 
-// 	// 	startSession := NewSessionBtnNav(api, r)
-// 	// 	if clnt, err := startSession.client(); err == nil {
-// 	// 		if clnt.HasSession(r.Context()) {
-// 	// 			navs = append(navs, startSession)
-// 	// 		}
-// 	// 	}
+	// api.HttpApi().VueRouter().PortalRoutes(func(r *http.Request) []router.VuePortalRoute {
+	// 	return []router.VuePortalRoute{
+	// 		{RouteName: "sample", RoutePath: "/sample", ComponentPath: "components/portal/Sample.vue"},
+	// 	}
+	// })
 
-// 	// 	return navs
-// 	// })
-// }
+	// api.HttpApi().VueRouter().PortalItems(func(r *http.Request) []router.VuePortalItem {
+	// 	navs := []router.VuePortalItem{}
+	// 	navs = append(navs, router.VuePortalItem{
+	// 		TranslateLabel: "sample",
+	// 		RouteName:      "sample",
+	// 	})
+	// 	return navs
+	// })
+
+	// api.NavApi().PortalNavsFn(func(r *http.Request) []navigation.Portal {
+	// 	inscoin := navigation.NewPortalItem("", "Insert Coin", "", api.HttpApi().Router().UrlForRoute(names.RouteInsertCoin))
+	// 	navs := []navigation.IPortalItem{inscoin}
+
+	// 	startSession := NewSessionBtnNav(api, r)
+	// 	if clnt, err := startSession.client(); err == nil {
+	// 		if clnt.HasSession(r.Context()) {
+	// 			navs = append(navs, startSession)
+	// 		}
+	// 	}
+
+	// 	return navs
+	// })
+}
