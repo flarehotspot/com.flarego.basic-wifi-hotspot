@@ -7,8 +7,8 @@ import (
 
 	"github.com/flarehotspot/com.flarego.basic-wifi-hotspot/app/routes/names"
 	connmgr "github.com/flarehotspot/core/sdk/api/connmgr"
-	plugin "github.com/flarehotspot/core/sdk/api/plugin"
 	"github.com/flarehotspot/core/sdk/api/http"
+	plugin "github.com/flarehotspot/core/sdk/api/plugin"
 )
 
 type SessionBtnNav struct {
@@ -53,11 +53,11 @@ func (self *SessionBtnNav) Href() string {
 
 	if !self.api.ClientMgr().IsConnected(clnt) {
 		if self.canConnect(self.r.Context()) {
-			return self.api.HttpApi().HttpRouter().UrlForRoute(names.RouteStartSession)
+			return self.api.Http().HttpRouter().UrlForRoute(names.RouteStartSession)
 		}
 		return "/"
 	} else {
-		return self.api.HttpApi().HttpRouter().UrlForRoute(names.RouteStopSession)
+		return self.api.Http().HttpRouter().UrlForRoute(names.RouteStopSession)
 	}
 }
 

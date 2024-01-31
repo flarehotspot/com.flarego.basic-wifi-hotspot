@@ -10,7 +10,7 @@ import (
 
 func SetPortalItems(api sdkplugin.IPluginApi) {
 
-	vrouter := api.HttpApi().VueRouter()
+	vrouter := api.Http().VueRouter()
 
 	vrouter.RegisterPortalRoutes([]sdkhttp.VuePortalRoute{
 		{
@@ -25,7 +25,7 @@ func SetPortalItems(api sdkplugin.IPluginApi) {
 					AnyPrice:             true,
 					CallbackVueRouteName: "portal.purchase-callback",
 				}
-				api.PaymentsApi().Checkout(w, r, p)
+				api.Payments().Checkout(w, r, p)
 			},
 		},
 		{
