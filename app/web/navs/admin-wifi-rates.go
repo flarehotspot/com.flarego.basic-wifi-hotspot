@@ -8,7 +8,7 @@ import (
 	// "github.com/flarehotspot/com.flarego.basic-wifi-hotspot/app/routes/names"
 )
 
-func AdminWifiRates(api plugin.IPluginApi) {
+func AdminWifiRates(api plugin.PluginApi) {
 	// wifiRatesNav := &AdminNav{
 	// 	category: navigation.CategoryPayments,
 	// 	text:     "Wifi Rates",

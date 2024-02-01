@@ -8,7 +8,7 @@ import (
 	sdkplugin "github.com/flarehotspot/core/sdk/api/plugin"
 )
 
-func SetPortalItems(api sdkplugin.IPluginApi) {
+func SetPortalItems(api sdkplugin.PluginApi) {
 
 	vrouter := api.Http().VueRouter()
 

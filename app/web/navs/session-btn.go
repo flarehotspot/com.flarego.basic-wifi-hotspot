@@ -12,11 +12,11 @@ import (
 )
 
 type SessionBtnNav struct {
-	api plugin.IPluginApi
+	api plugin.PluginApi
 	r   *http.Request
 }
 
-func NewSessionBtnNav(api plugin.IPluginApi, r *http.Request) *SessionBtnNav {
+func NewSessionBtnNav(api plugin.PluginApi, r *http.Request) *SessionBtnNav {
 	return &SessionBtnNav{api, r}
 }
 
@@ -30,7 +30,7 @@ func (self *SessionBtnNav) Text() string {
 		return err.Error()
 	}
 
-	if self.api.ClientMgr().IsConnected(clnt) {
+	if self.api.SessionsMgr().IsConnected(clnt) {
 		return "Pause"
 	}
 
@@ -51,7 +51,7 @@ func (self *SessionBtnNav) Href() string {
 		return err.Error()
 	}
 
-	if !self.api.ClientMgr().IsConnected(clnt) {
+	if !self.api.SessionsMgr().IsConnected(clnt) {
 		if self.canConnect(self.r.Context()) {
 			return self.api.Http().HttpRouter().UrlForRoute(names.RouteStartSession)
 		}
@@ -61,13 +61,13 @@ func (self *SessionBtnNav) Href() string {
 	}
 }
 
-func (self *SessionBtnNav) client() (connmgr.IClientDevice, error) {
+func (self *SessionBtnNav) client() (connmgr.ClientDevice, error) {
 	if self.r == nil {
 		return nil, errors.New("Session http request is not initialized.")
 	}
 
 	clntSym := self.r.Context().Value(sdkhttp.ClientCtxKey)
-	clnt, ok := clntSym.(connmgr.IClientDevice)
+	clnt, ok := clntSym.(connmgr.ClientDevice)
 	if !ok {
 		return nil, errors.New("Could not determine client device.")
 	}

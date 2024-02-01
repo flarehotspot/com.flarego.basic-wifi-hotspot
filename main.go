@@ -10,7 +10,7 @@ import (
 
 func main() {}
 
-func Init(api plugin.IPluginApi) {
+func Init(api plugin.PluginApi) {
 	routes.PortalRoutes(api)
 	routes.AdminRoutes(api)
 

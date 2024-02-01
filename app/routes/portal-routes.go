@@ -7,7 +7,7 @@ import (
 	// "github.com/flarehotspot/com.flarego.basic-wifi-hotspot/app/routes/names"
 )
 
-func PortalRoutes(api plugin.IPluginApi) {
+func PortalRoutes(api plugin.PluginApi) {
 	// rtr := api.HttpApi().HttpRouter()
 	// portalCtrl := controllers.NewPortalCtrl(api)
 	// paymentsCtrl := controllers.NewPaymentCtrl(api)

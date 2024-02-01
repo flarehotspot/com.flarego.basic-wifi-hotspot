@@ -6,7 +6,7 @@ import (
 	// "github.com/flarehotspot/com.flarego.basic-wifi-hotspot/app/routes/names"
 )
 
-func AdminRoutes(api plugin.IPluginApi) {
+func AdminRoutes(api plugin.PluginApi) {
 	// rtr := api.HttpApi().HttpRouter().AdminRouter()
 	// ratesCtrl := controllers.NewWifiRatesCtrl(api)
 
