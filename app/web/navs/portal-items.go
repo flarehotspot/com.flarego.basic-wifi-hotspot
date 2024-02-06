@@ -32,6 +32,18 @@ func SetPortalItems(api sdkplugin.PluginApi) {
 			RouteName: "portal.purchase-callback",
 			RoutePath: "/purchase-callback",
 			Component: "portal/PurchaseCallback.vue",
+			HandlerFunc: func(w http.ResponseWriter, r *http.Request) {
+				res := api.Http().VueResponse()
+				purchase, err := api.Payments().GetPendingPurchase(r)
+				if err != nil {
+					res.Error(w, err.Error(), 500)
+					return
+				}
+				res.Json(w, purchase, 200)
+			},
+			Middlewares: []func(next http.Handler) http.Handler{
+				api.Http().Middlewares().Device(),
+			},
 		},
 	}...)
 
