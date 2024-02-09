@@ -15,5 +15,4 @@ func Init(api plugin.PluginApi) {
 	routes.AdminRoutes(api)
 
 	navs.SetPortalItems(api)
-	navs.AdminWifiRates(api)
 }

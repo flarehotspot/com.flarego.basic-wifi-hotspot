@@ -3,6 +3,7 @@ package navs
 import (
 	"net/http"
 
+	"github.com/flarehotspot/com.flarego.basic-wifi-hotspot/app/controllers"
 	sdkhttp "github.com/flarehotspot/core/sdk/api/http"
 	sdkpayments "github.com/flarehotspot/core/sdk/api/payments"
 	sdkplugin "github.com/flarehotspot/core/sdk/api/plugin"
@@ -29,18 +30,18 @@ func SetPortalItems(api sdkplugin.PluginApi) {
 			},
 		},
 		{
-			RouteName: "portal.purchase-callback",
-			RoutePath: "/purchase-callback",
-			Component: "portal/PurchaseCallback.vue",
-			HandlerFunc: func(w http.ResponseWriter, r *http.Request) {
-				res := api.Http().VueResponse()
-				purchase, err := api.Payments().GetPendingPurchase(r)
-				if err != nil {
-					res.Error(w, err.Error(), 500)
-					return
-				}
-				res.Json(w, purchase, 200)
+			RouteName:   "portal.purchase-callback",
+			RoutePath:   "/purchase-callback",
+			Component:   "portal/PurchaseCallback.vue",
+			HandlerFunc: controllers.PaymentRecevied(api),
+			Middlewares: []func(next http.Handler) http.Handler{
+				api.Http().Middlewares().Device(),
 			},
+		},
+		{
+			RouteName:   "portal.start-session",
+			RoutePath:   "/start-session",
+			HandlerFunc: controllers.StartSession(api),
 			Middlewares: []func(next http.Handler) http.Handler{
 				api.Http().Middlewares().Device(),
 			},
@@ -54,35 +55,14 @@ func SetPortalItems(api sdkplugin.PluginApi) {
 			Label:     "insert_coin",
 			RouteName: "portal.insert-coin",
 		})
+
+		navs = append(navs, sdkhttp.VuePortalItem{
+			IconPath:  "images/wifi-logo.png",
+			Label:     "Start Session",
+			RouteName: "portal.start-session",
+		})
+
 		return navs
 	})
 
-	// api.HttpApi().VueRouter().PortalRoutes(func(r *http.Request) []router.VuePortalRoute {
-	// 	return []router.VuePortalRoute{
-	// 		{RouteName: "sample", RoutePath: "/sample", ComponentPath: "components/portal/Sample.vue"},
-	// 	}
-	// })
-
-	// api.HttpApi().VueRouter().PortalItems(func(r *http.Request) []router.VuePortalItem {
-	// 	navs := []router.VuePortalItem{}
-	// 	navs = append(navs, router.VuePortalItem{
-	// 		TranslateLabel: "sample",
-	// 		RouteName:      "sample",
-	// 	})
-	// 	return navs
-	// })
-
-	// api.NavApi().PortalNavsFn(func(r *http.Request) []navigation.Portal {
-	// 	inscoin := navigation.NewPortalItem("", "Insert Coin", "", api.HttpApi().Router().UrlForRoute(names.RouteInsertCoin))
-	// 	navs := []navigation.IPortalItem{inscoin}
-
-	// 	startSession := NewSessionBtnNav(api, r)
-	// 	if clnt, err := startSession.client(); err == nil {
-	// 		if clnt.HasSession(r.Context()) {
-	// 			navs = append(navs, startSession)
-	// 		}
-	// 	}
-
-	// 	return navs
-	// })
 }

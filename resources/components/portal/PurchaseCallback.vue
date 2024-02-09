@@ -1,5 +1,8 @@
 <template>
-    <h3>Thank You !!!</h3>
+    <div>
+        <h3>Thank You !!!</h3>
+        <router-link to="/"><button>Go to Home</button></router-link>
+    </div>
 </template>
 
 <script>
