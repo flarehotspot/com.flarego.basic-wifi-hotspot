@@ -34,17 +34,11 @@ func SetPortalItems(api sdkplugin.PluginApi) {
 			RoutePath:   "/purchase-callback",
 			Component:   "portal/PurchaseCallback.vue",
 			HandlerFunc: controllers.PaymentRecevied(api),
-			Middlewares: []func(next http.Handler) http.Handler{
-				api.Http().Middlewares().Device(),
-			},
 		},
 		{
 			RouteName:   "portal.start-session",
 			RoutePath:   "/start-session",
 			HandlerFunc: controllers.StartSession(api),
-			Middlewares: []func(next http.Handler) http.Handler{
-				api.Http().Middlewares().Device(),
-			},
 		},
 	}...)
 
