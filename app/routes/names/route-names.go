@@ -1,6 +1,6 @@
 package names
 
-import "github.com/flarehotspot/flarehotspot/core/sdk/api/http"
+import "github.com/flarehotspot/sdk/api/http"
 
 const (
 	RouteAdminRatesIndex  sdkhttp.PluginRouteName = "admin:rates:index"

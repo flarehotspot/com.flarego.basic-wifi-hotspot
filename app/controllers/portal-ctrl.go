@@ -6,12 +6,12 @@ package controllers
 // 	"net/http"
 
 // 	"github.com/flarehotspot/com.flarego.basic-wifi-hotspot/app/routes/names"
-// 	"github.com/flarehotspot/flarehotspot/core/sdk/api/connmgr"
-// 	"github.com/flarehotspot/flarehotspot/core/sdk/api/http/response"
-// 	"github.com/flarehotspot/flarehotspot/core/sdk/api/payments"
-// 	"github.com/flarehotspot/flarehotspot/core/sdk/api/plugin"
-// 	"github.com/flarehotspot/flarehotspot/core/sdk/utils/contexts"
-// 	"github.com/flarehotspot/flarehotspot/core/sdk/utils/flash"
+// 	"github.com/flarehotspot/sdk/api/connmgr"
+// 	"github.com/flarehotspot/sdk/api/http/response"
+// 	"github.com/flarehotspot/sdk/api/payments"
+// 	"github.com/flarehotspot/sdk/api/plugin"
+// 	"github.com/flarehotspot/sdk/utils/contexts"
+// 	"github.com/flarehotspot/sdk/utils/flash"
 // )
 
 // type PortalCtrl struct {
