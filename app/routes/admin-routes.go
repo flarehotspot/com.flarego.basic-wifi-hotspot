@@ -1,7 +1,7 @@
 package routes
 
 import (
-	plugin "github.com/flarehotspot/core/sdk/api/plugin"
+	plugin "github.com/flarehotspot/flarehotspot/core/sdk/api/plugin"
 	// "github.com/flarehotspot/com.flarego.basic-wifi-hotspot/app/controllers"
 	// "github.com/flarehotspot/com.flarego.basic-wifi-hotspot/app/routes/names"
 )

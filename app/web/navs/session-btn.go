@@ -6,9 +6,9 @@ import (
 	"net/http"
 
 	"github.com/flarehotspot/com.flarego.basic-wifi-hotspot/app/routes/names"
-	connmgr "github.com/flarehotspot/core/sdk/api/connmgr"
-	"github.com/flarehotspot/core/sdk/api/http"
-	plugin "github.com/flarehotspot/core/sdk/api/plugin"
+	connmgr "github.com/flarehotspot/flarehotspot/core/sdk/api/connmgr"
+	"github.com/flarehotspot/flarehotspot/core/sdk/api/http"
+	plugin "github.com/flarehotspot/flarehotspot/core/sdk/api/plugin"
 )
 
 type SessionBtnNav struct {

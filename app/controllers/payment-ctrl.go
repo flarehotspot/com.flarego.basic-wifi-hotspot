@@ -3,7 +3,7 @@ package controllers
 import (
 	"net/http"
 
-	"github.com/flarehotspot/core/sdk/api/plugin"
+	"github.com/flarehotspot/flarehotspot/core/sdk/api/plugin"
 )
 
 func PaymentRecevied(api sdkplugin.PluginApi) http.HandlerFunc {

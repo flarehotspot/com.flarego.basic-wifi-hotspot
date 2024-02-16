@@ -6,11 +6,11 @@ package controllers
 // 	"strconv"
 
 // 	"github.com/flarehotspot/com.flarego.basic-wifi-hotspot/app/routes/names"
-// 	"github.com/flarehotspot/core/sdk/api/config"
-// 	"github.com/flarehotspot/core/sdk/api/plugin"
-// 	"github.com/flarehotspot/core/sdk/utils/flash"
-// 	"github.com/flarehotspot/core/sdk/utils/slices"
-// 	"github.com/flarehotspot/core/sdk/utils/strings"
+// 	"github.com/flarehotspot/flarehotspot/core/sdk/api/config"
+// 	"github.com/flarehotspot/flarehotspot/core/sdk/api/plugin"
+// 	"github.com/flarehotspot/flarehotspot/core/sdk/utils/flash"
+// 	"github.com/flarehotspot/flarehotspot/core/sdk/utils/slices"
+// 	"github.com/flarehotspot/flarehotspot/core/sdk/utils/strings"
 // )
 
 // type SessionRatesCtrl struct {
