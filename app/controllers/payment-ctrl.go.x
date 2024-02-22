@@ -5,8 +5,8 @@ package controllers
 // 	"log"
 // 	"net/http"
 
-// 	"github.com/flarehotspot/core/sdk/api/http"
-// 	"github.com/flarehotspot/core/sdk/api/plugin"
+// 	"github.com/flarehotspot/sdk/api/http"
+// 	"github.com/flarehotspot/sdk/api/plugin"
 // )
 
 // type PaymentCtrl struct {

@@ -4,9 +4,9 @@ import (
 	"net/http"
 
 	"github.com/flarehotspot/com.flarego.basic-wifi-hotspot/app/controllers"
-	sdkhttp "github.com/flarehotspot/core/sdk/api/http"
-	sdkpayments "github.com/flarehotspot/core/sdk/api/payments"
-	sdkplugin "github.com/flarehotspot/core/sdk/api/plugin"
+	sdkhttp "github.com/flarehotspot/sdk/api/http"
+	sdkpayments "github.com/flarehotspot/sdk/api/payments"
+	sdkplugin "github.com/flarehotspot/sdk/api/plugin"
 )
 
 func SetPortalItems(api sdkplugin.PluginApi) {
