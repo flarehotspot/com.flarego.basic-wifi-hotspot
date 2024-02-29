@@ -9,7 +9,7 @@ import (
 func PaymentRecevied(api sdkplugin.PluginApi) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		res := api.Http().VueResponse()
-		clnt, err := api.Http().GetDevice(r)
+		clnt, err := api.Http().GetClientDevice(r)
 		if err != nil {
 			res.Error(w, err.Error(), 500)
 			return
@@ -42,7 +42,7 @@ func PaymentRecevied(api sdkplugin.PluginApi) http.HandlerFunc {
 func StartSession(api sdkplugin.PluginApi) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		res := api.Http().VueResponse()
-		clnt, err := api.Http().GetDevice(r)
+		clnt, err := api.Http().GetClientDevice(r)
 		if err != nil {
 			res.Error(w, err.Error(), 500)
 			return
