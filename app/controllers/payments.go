@@ -23,7 +23,6 @@ func Payments(api sdkplugin.PluginApi) http.HandlerFunc {
 			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 
 		}
-
 		//reading the request body using io.readall instead of r.postformvalue
 		body, err := io.ReadAll(r.Body)
 		if err != nil {
@@ -55,7 +54,7 @@ func Payments(api sdkplugin.PluginApi) http.HandlerFunc {
 			userData.Out[i].Price = price
 			userData.Out[i].Data = data
 		}
-		api.Http().VueResponse().FlashMsg("success", "Settings saved successfully.")
+
 		api.Http().VueResponse().Json(w, userData, 200)
 		err = api.Config().Plugin().WriteJson(&userData)
 		if err != nil {

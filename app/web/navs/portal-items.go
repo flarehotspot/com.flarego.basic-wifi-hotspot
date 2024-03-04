@@ -4,9 +4,9 @@ import (
 	"net/http"
 
 	"github.com/flarehotspot/com.flarego.basic-wifi-hotspot/app/controllers"
-	sdkhttp "github.com/flarehotspot/sdk/api/http"
-	sdkpayments "github.com/flarehotspot/sdk/api/payments"
-	sdkplugin "github.com/flarehotspot/sdk/api/plugin"
+	sdkhttp "github.com/flarehotspot/core/sdk/api/http"
+	sdkpayments "github.com/flarehotspot/core/sdk/api/payments"
+	sdkplugin "github.com/flarehotspot/core/sdk/api/plugin"
 )
 
 func SetPortalItems(api sdkplugin.PluginApi) {
@@ -33,7 +33,7 @@ func SetPortalItems(api sdkplugin.PluginApi) {
 			RouteName:   "portal.purchase-callback",
 			RoutePath:   "/purchase-callback",
 			Component:   "portal/PurchaseCallback.vue",
-			HandlerFunc: controllers.PaymentRecevied(api),
+			HandlerFunc: controllers.PaymentReceived(api),
 		},
 		{
 			RouteName:   "portal.start-session",
@@ -46,7 +46,7 @@ func SetPortalItems(api sdkplugin.PluginApi) {
 		navs := []sdkhttp.VuePortalItem{}
 		navs = append(navs, sdkhttp.VuePortalItem{
 			IconPath:  "images/wifi-logo.png",
-			Label:     "insert_coin",
+			Label:     "Insert Coin",
 			RouteName: "portal.insert-coin",
 		})
 
