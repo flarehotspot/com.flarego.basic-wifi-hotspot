@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/flarehotspot/com.flarego.basic-wifi-hotspot/app/controllers"
+
 	sdkhttp "github.com/flarehotspot/sdk/api/http"
 	sdkpayments "github.com/flarehotspot/sdk/api/payments"
 	sdkplugin "github.com/flarehotspot/sdk/api/plugin"
@@ -13,6 +14,22 @@ func SetPortalItems(api sdkplugin.PluginApi) {
 
 	vrouter := api.Http().VueRouter()
 
+	vrouter.AdminNavsFunc(func(r *http.Request) []sdkhttp.VueAdminNav {
+		return []sdkhttp.VueAdminNav{
+			{
+				Category:  sdkhttp.NavCategoryPayments,
+				Label:     "Payments",
+				RouteName: "payment",
+			},
+		}
+	})
+
+	vrouter.RegisterAdminRoutes(sdkhttp.VueAdminRoute{
+		RouteName:   "payment",
+		RoutePath:   "/payment",
+		Component:   "admin/PaymentDashboard.vue",
+		HandlerFunc: controllers.PaymentDashboard(api),
+	})
 	vrouter.RegisterPortalRoutes([]sdkhttp.VuePortalRoute{
 		{
 			RouteName: "portal.insert-coin",
@@ -33,12 +50,17 @@ func SetPortalItems(api sdkplugin.PluginApi) {
 			RouteName:   "portal.purchase-callback",
 			RoutePath:   "/purchase-callback",
 			Component:   "portal/PurchaseCallback.vue",
-			HandlerFunc: controllers.PaymentRecevied(api),
+			HandlerFunc: controllers.PaymentReceived(api),
 		},
 		{
 			RouteName:   "portal.start-session",
 			RoutePath:   "/start-session",
 			HandlerFunc: controllers.StartSession(api),
+		},
+		{
+			RouteName:   "portal.pause-session",
+			RoutePath:   "/pause-session",
+			HandlerFunc: controllers.PauseSession(api),
 		},
 	}...)
 
@@ -46,7 +68,7 @@ func SetPortalItems(api sdkplugin.PluginApi) {
 		navs := []sdkhttp.VuePortalItem{}
 		navs = append(navs, sdkhttp.VuePortalItem{
 			IconPath:  "images/wifi-logo.png",
-			Label:     "insert_coin",
+			Label:     "Insert Coin",
 			RouteName: "portal.insert-coin",
 		})
 
@@ -54,6 +76,12 @@ func SetPortalItems(api sdkplugin.PluginApi) {
 			IconPath:  "images/wifi-logo.png",
 			Label:     "Start Session",
 			RouteName: "portal.start-session",
+		})
+
+		navs = append(navs, sdkhttp.VuePortalItem{
+			IconPath:  "images/wifi-logo.png",
+			Label:     "Pause Session",
+			RouteName: "portal.pause-session",
 		})
 
 		return navs
