@@ -1,6 +1,6 @@
 package names
 
-import "github.com/flarehotspot/sdk/api/http"
+import sdkhttp "github.com/flarehotspot/sdk/api/http"
 
 const (
 	RouteAdminRatesIndex  sdkhttp.PluginRouteName = "admin:rates:index"
@@ -10,4 +10,5 @@ const (
 	RoutePaymentReceived  sdkhttp.PluginRouteName = "payment-received"
 	RouteStartSession     sdkhttp.PluginRouteName = "start-session"
 	RouteStopSession      sdkhttp.PluginRouteName = "stop-session"
+	RouteSaveSettings     sdkhttp.PluginRouteName = "save-settings"
 )
