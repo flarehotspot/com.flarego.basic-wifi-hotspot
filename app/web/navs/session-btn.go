@@ -5,7 +5,7 @@ import (
 	"errors"
 	"net/http"
 
-	"github.com/flarehotspot/com.flarego.basic-wifi-hotspot/app/routes/names"
+	// "github.com/flarehotspot/com.flarego.basic-wifi-hotspot/app/routes/names"
 	connmgr "github.com/flarehotspot/sdk/api/connmgr"
 	"github.com/flarehotspot/sdk/api/http"
 	plugin "github.com/flarehotspot/sdk/api/plugin"
@@ -53,11 +53,11 @@ func (self *SessionBtnNav) Href() string {
 
 	if !self.api.SessionsMgr().IsConnected(clnt) {
 		if self.canConnect(self.r.Context()) {
-			return self.api.Http().HttpRouter().UrlForRoute(names.RouteStartSession)
+			return self.api.Http().HttpRouter().UrlForRoute("session.start")
 		}
 		return "/"
 	} else {
-		return self.api.Http().HttpRouter().UrlForRoute(names.RouteStopSession)
+		return self.api.Http().HttpRouter().UrlForRoute("session.start")
 	}
 }
 
