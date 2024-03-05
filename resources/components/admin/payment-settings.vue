@@ -18,9 +18,6 @@ define(function () {
     return {
         props: ['flareView'],
         template: template,
-        mounted: function () {
-            console.log(this.flareView)
-        },
         methods: {
             addEntry: function () {
                 this.flareView.data.push({
