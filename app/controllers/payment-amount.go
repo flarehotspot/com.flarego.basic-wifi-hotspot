@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"io"
 	"net/http"
-	"strconv"
 
 	sdkplugin "github.com/flarehotspot/sdk/api/plugin"
 )
@@ -35,23 +34,6 @@ func Payments(api sdkplugin.PluginApi) http.HandlerFunc {
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
-		}
-
-		for i := 0; i < 3; i++ {
-			price, err := strconv.Atoi(strconv.Itoa(userData[i].Price))
-			if err != nil {
-				http.Error(w, "Price parsing error: "+err.Error(), http.StatusBadRequest)
-				return
-			}
-			data, err := strconv.Atoi(strconv.Itoa(userData[i].Data))
-			if err != nil {
-				http.Error(w, "Data parsing error:"+err.Error(), http.StatusBadRequest)
-				return
-
-			}
-
-			userData[i].Price = price
-			userData[i].Data = data
 		}
 
 		api.Http().VueResponse().Json(w, userData, 200)
