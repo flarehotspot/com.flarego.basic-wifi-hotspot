@@ -33,9 +33,7 @@ func PaymentRecevied(api sdkplugin.PluginApi) http.HandlerFunc {
 			return
 		}
 
-		res.FlashMsg("success", "Payment received")
-		res.Json(w, nil, 200)
-
+		res.SendFlashMsg(w, "success", "Payment received", http.StatusOK)
 	}
 }
 
@@ -54,7 +52,7 @@ func StartSession(api sdkplugin.PluginApi) http.HandlerFunc {
 			return
 		}
 
-		res.FlashMsg("success", "Session started")
+		res.SetFlashMsg("success", "Session started")
         res.RedirectToPortal(w)
 	}
 }
