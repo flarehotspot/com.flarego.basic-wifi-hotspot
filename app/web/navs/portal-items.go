@@ -52,7 +52,7 @@ func SetPortalItems(api sdkplugin.PluginApi) {
 		{
 			RouteName:   "portal.start-session",
 			RoutePath:   "/start-session",
-			HandlerFunc: controllers.StartSession(api, controllers.PaymentData{}),
+			HandlerFunc: controllers.StartSession(api),
 		},
 		{
 			RouteName:   "portal.pause-session",

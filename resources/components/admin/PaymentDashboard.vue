@@ -8,7 +8,7 @@
         label-class="font-weight-bold pt-0"
         class="mb-0"
       >
-        <div v-for="(plan,index) in plans" :key="plan.price">
+        <div v-for="(plan) in plans" :key="plan.price">
           <b-form-group
             :label="`₱${plan.price}:`"
             label-cols-sm="3"
@@ -26,7 +26,7 @@
               step="100"
               v-model="plan.dataAllocation"
             ></b-form-spinbutton>
-            <label for="sb-wrap" class="mt-2">Time Allotment: {{ timeLabels[index] }}</label>
+            <label for="sb-wrap" class="mt-2">Time Allotment: {{ plan.timeInMins }}</label>
             <b-form-input
               class="mr-2 ml-2"
               :id="`range-${plan.price}`"
@@ -52,42 +52,41 @@ define(function() {
     data: function() {
       return {
         plans: [
-          { price: 1, dataAllocation: 0, timeInMins: "" },
-          { price: 5, dataAllocation: 0, timeInMins: "" },
-          { price: 10, dataAllocation: 0, timeInMins: "" },
+          { price: 1, dataAllocation: 0, timeInMins:'0' },
+          { price: 5, dataAllocation: 0, timeInMins: '0' },
+          { price: 10, dataAllocation: 0, timeInMins: '0'},
         ],  
       };
     },
-    computed: {
-      timeLabels() {
-        return this.plans.map(plan => {
-          if(plan.timeInMins === 0 || plan.timeInMins === 1) {
-            return '1 minute';
-          } else if(plan.timeInMins % 60 === 0) {
-            const hours = plan.timeInMins / 60;
-            return hours === 1 ? '1 hour' : `${hours} hours`;
-          } else {
-            const hours = Math.floor(plan.timeInMins / 60);
-            const minutes = plan.timeInMins % 60;
-            if(hours === 0) {
-              return `${minutes} minutes`;
-            } else {
-              return `${hours} hours ${minutes} minutes`;
-            }
-          }
-        });
-      }
-    },
+    // computed: {
+    //   timeLabels() {
+    //     return this.plans.map(plan => {
+    //       if(plan.timeInMins === 0 || plan.timeInMins === 1) {
+    //         return '1 minute';
+    //       } else if(plan.timeInMins % 60 === 0) {
+    //         const hours = plan.timeInMins / 60;
+    //         return hours === 1 ? '1 hour' : `${hours} hours`;
+    //       } else {
+    //         const hours = Math.floor(plan.timeInMins / 60);
+    //         const minutes = plan.timeInMins % 60;
+    //         if(hours === 0) {
+    //           return `${minutes} minutes`;
+    //         } else {
+    //           return `${hours} hours ${minutes} minutes`;
+    //         }
+    //       }
+    //     });
+    //   }
+    // },
     methods: {
       submitForm() {
         // Form data
-        const formData = {
-      out: this.plans.map(plan => ({
+        const formData = 
+      this.plans.map(plan => ({
         price: plan.price,
         dataAlloc: plan.dataAllocation,
-        timeInMins: plan.timeInMins
-      }))
-    };
+        timeInMins: plan.timeInMins*1
+      }));
 
         window.$flare.http.post('<% .Helpers.UrlForRoute "save-settings" %>', formData)
         .then(response=>{
