@@ -24,7 +24,7 @@ func SavePaymentSettings(api sdkplugin.PluginApi) http.HandlerFunc {
 		}
 
 		res := api.Http().VueResponse()
-		res.Json(w, settings, 200)
-		res.FlashMsg("success", "Settings saved successfully")
+
+		res.SendFlashMsg(w, "success", "Settings saved successfully", http.StatusOK)
 	})
 }

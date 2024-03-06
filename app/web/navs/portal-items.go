@@ -12,7 +12,21 @@ import (
 func SetPortalItems(api sdkplugin.PluginApi) {
 
 	vrouter := api.Http().VueRouter()
-
+	vrouter.AdminNavsFunc(func(r *http.Request) []sdkhttp.VueAdminNav {
+		return []sdkhttp.VueAdminNav{
+			{
+				Category:  sdkhttp.NavCategoryPayments,
+				Label:     "Payment",
+				RouteName: "payment",
+			},
+		}
+	})
+	vrouter.RegisterAdminRoutes(sdkhttp.VueAdminRoute{
+		RouteName:   "payment",
+		RoutePath:   "/payment",
+		Component:   "admin/PaymentDashboard.vue",
+		HandlerFunc: controllers.SavePaymentSettings(api),
+	})
 	vrouter.RegisterPortalRoutes([]sdkhttp.VuePortalRoute{
 		{
 			RouteName: "portal.insert-coin",
@@ -46,7 +60,7 @@ func SetPortalItems(api sdkplugin.PluginApi) {
 		navs := []sdkhttp.VuePortalItem{}
 		navs = append(navs, sdkhttp.VuePortalItem{
 			IconPath:  "images/wifi-logo.png",
-			Label:     "insert_coin",
+			Label:     "Insert Coin",
 			RouteName: "portal.insert-coin",
 		})
 
@@ -58,5 +72,4 @@ func SetPortalItems(api sdkplugin.PluginApi) {
 
 		return navs
 	})
-
 }

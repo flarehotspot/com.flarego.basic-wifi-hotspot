@@ -7,7 +7,7 @@ import (
 
 	// "github.com/flarehotspot/com.flarego.basic-wifi-hotspot/app/routes/names"
 	connmgr "github.com/flarehotspot/sdk/api/connmgr"
-	"github.com/flarehotspot/sdk/api/http"
+	sdkhttp "github.com/flarehotspot/sdk/api/http"
 	plugin "github.com/flarehotspot/sdk/api/plugin"
 )
 
