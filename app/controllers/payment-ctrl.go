@@ -3,7 +3,7 @@ package controllers
 import (
 	"net/http"
 
-	"github.com/flarehotspot/sdk/api/plugin"
+	sdkplugin "github.com/flarehotspot/sdk/api/plugin"
 )
 
 func PaymentRecevied(api sdkplugin.PluginApi) http.HandlerFunc {
@@ -33,7 +33,7 @@ func PaymentRecevied(api sdkplugin.PluginApi) http.HandlerFunc {
 			return
 		}
 
-		res.SendFlashMsg(w, "success", "Payment received", http.StatusOK)
+		res.FlashMsg("success", "Payment received")
 	}
 }
 
@@ -52,7 +52,7 @@ func StartSession(api sdkplugin.PluginApi) http.HandlerFunc {
 			return
 		}
 
-		res.SetFlashMsg("success", "Session started")
-        res.RedirectToPortal(w)
+		res.FlashMsg("success", "Session started")
+		res.RedirectToPortal(w)
 	}
 }
