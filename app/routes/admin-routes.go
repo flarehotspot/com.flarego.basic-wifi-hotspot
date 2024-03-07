@@ -22,7 +22,7 @@ func AdminRoutes(api plugin.PluginApi) {
 			res := api.Http().VueResponse()
 
 			var settings utils.PaymentSettings
-			err := api.Config().Plugin().ReadJson(&settings)
+			err := api.Config().Plugin().Get(&settings)
 			if err != nil {
 				res.Json(w, utils.DefaultPaymentSettings, http.StatusOK)
 				return
