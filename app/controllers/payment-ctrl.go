@@ -10,6 +10,7 @@ import (
 
 func PaymentRecevied(api sdkplugin.PluginApi) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+
 		res := api.Http().VueResponse()
 		clnt, err := api.Http().GetClientDevice(r)
 		if err != nil {
@@ -17,8 +18,8 @@ func PaymentRecevied(api sdkplugin.PluginApi) http.HandlerFunc {
 			return
 		}
 
-		var paymentData utils.PaymentSettings
-		err = api.Config().Plugin().ReadJson(&paymentData)
+		var paymentSettings utils.PaymentSettings
+		err = api.Config().Plugin().ReadJson(&paymentSettings)
 		if err != nil {
 			res.Error(w, err.Error(), http.StatusUnprocessableEntity)
 			return
@@ -28,24 +29,25 @@ func PaymentRecevied(api sdkplugin.PluginApi) http.HandlerFunc {
 			res.Error(w, err.Error(), 500)
 			return
 		}
-		timeSamples := make([]int, 5)
-		dataPoints := make([]int, 5)
 
-		for i, value := range paymentData {
+		timeSamples := make([]float64, len(paymentSettings))
+		dataPoints := make([]float64, len(paymentSettings))
+
+		for i, value := range paymentSettings {
 			timeSamples[i] = value.TimeMins
 			dataPoints[i] = value.DataMb
 		}
 
 		purchaseState, err := purchase.State()
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
+			res.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
 
 		if purchaseState.TotalPayment > 0 {
 			tens, fives, ones := divideIntoTensFivesOnes(int(purchaseState.TotalPayment))
-			totaldata := tens*dataPoints[2] + fives*dataPoints[1] + ones*dataPoints[0]
-			totalamount := tens*timeSamples[2] + fives*timeSamples[1] + ones*timeSamples[0]
+			totaldata := float64(tens)*dataPoints[2] + float64(fives)*dataPoints[1] + float64(ones)*dataPoints[0]
+			totalamount := float64(tens)*timeSamples[2] + float64(fives)*timeSamples[1] + float64(ones)*timeSamples[0]
 
 			err = api.SessionsMgr().CreateSession(r.Context(), clnt.Id(), 0, uint(float64(totalamount)), float64(totaldata), nil, 10, 10, false)
 			if err != nil {
