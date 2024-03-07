@@ -46,13 +46,13 @@ func StartSession(api sdkplugin.PluginApi) http.HandlerFunc {
 			return
 		}
 
-		err = api.SessionsMgr().Connect(clnt)
+		err = api.SessionsMgr().Connect(r.Context(), clnt)
 		if err != nil {
 			res.Error(w, err.Error(), 500)
 			return
 		}
 
 		res.SetFlashMsg("success", "Session started")
-        res.RedirectToPortal(w)
+		res.RedirectToPortal(w)
 	}
 }
