@@ -10,15 +10,7 @@ import (
 )
 
 func SetPortalItems(api sdkplugin.PluginApi) {
-	var r *http.Request
-	var w http.ResponseWriter
 	vrouter := api.Http().VueRouter()
-	res := api.Http().VueResponse()
-	clnt, err := api.Http().GetClientDevice(r)
-	if err != nil {
-		res.Error(w, err.Error(), 500)
-		return
-	}
 	vrouter.RegisterPortalRoutes([]sdkhttp.VuePortalRoute{
 		{
 			RouteName: "portal.insert-coin",
@@ -46,11 +38,6 @@ func SetPortalItems(api sdkplugin.PluginApi) {
 			RoutePath:   "/start-session",
 			HandlerFunc: controllers.StartSession(api),
 		},
-		{
-			RouteName:   "portal.pause-session",
-			RoutePath:   "/pause-session",
-			HandlerFunc: controllers.PauseSession(api),
-		},
 	}...)
 
 	vrouter.PortalItemsFunc(func(r *http.Request) []sdkhttp.VuePortalItem {
@@ -60,30 +47,12 @@ func SetPortalItems(api sdkplugin.PluginApi) {
 			Label:     "Insert Coin",
 			RouteName: "portal.insert-coin",
 		})
-		//check if theres a session available
-		if !api.SessionsMgr().IsConnected(clnt) {
-			if clnt.HasSession(r.Context()) {
-				//if session is available, then show the start button
-				navs = append(navs, sdkhttp.VuePortalItem{
-					IconPath:  "images/wifi-logo.png",
-					Label:     "Start Session",
-					RouteName: "portal.start-session",
-				})
-			}
-			//if session is not available, then show insert coin button
-			navs = append(navs, sdkhttp.VuePortalItem{
-				IconPath:  "images/wifi-logo.png",
-				Label:     "Start Session",
-				RouteName: "portal.start-session",
-			})
-		} else {
-			//if session is running, then show the pause
-			navs = append(navs, sdkhttp.VuePortalItem{
-				IconPath:  "images/wifi-logo.png",
-				Label:     "Pause Session",
-				RouteName: "portal.pause-session",
-			})
-		}
+
+		navs = append(navs, sdkhttp.VuePortalItem{
+			IconPath:  "images/wifi-logo.png",
+			Label:     "Start Session",
+			RouteName: "portal.start-session",
+		})
 
 		return navs
 	})
