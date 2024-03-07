@@ -7,7 +7,7 @@ import (
 
 	// "github.com/flarehotspot/com.flarego.basic-wifi-hotspot/app/routes/names"
 	connmgr "github.com/flarehotspot/sdk/api/connmgr"
-	sdkhttp "github.com/flarehotspot/sdk/api/http"
+	"github.com/flarehotspot/sdk/api/http"
 	plugin "github.com/flarehotspot/sdk/api/plugin"
 )
 
@@ -25,7 +25,7 @@ func (self *SessionBtnNav) IconPath() string {
 }
 
 func (self *SessionBtnNav) Text() string {
-	clnt, err := self.Client()
+	clnt, err := self.client()
 	if err != nil {
 		return err.Error()
 	}
@@ -34,7 +34,7 @@ func (self *SessionBtnNav) Text() string {
 		return "Pause"
 	}
 
-	if self.CanConnect(self.r.Context()) {
+	if self.canConnect(self.r.Context()) {
 		return "Connect"
 	}
 
@@ -46,13 +46,13 @@ func (self *SessionBtnNav) Description() string {
 }
 
 func (self *SessionBtnNav) Href() string {
-	clnt, err := self.Client()
+	clnt, err := self.client()
 	if err != nil {
 		return err.Error()
 	}
 
 	if !self.api.SessionsMgr().IsConnected(clnt) {
-		if self.CanConnect(self.r.Context()) {
+		if self.canConnect(self.r.Context()) {
 			return self.api.Http().HttpRouter().UrlForRoute("session.start")
 		}
 		return "/"
@@ -61,7 +61,7 @@ func (self *SessionBtnNav) Href() string {
 	}
 }
 
-func (self *SessionBtnNav) Client() (connmgr.ClientDevice, error) {
+func (self *SessionBtnNav) client() (connmgr.ClientDevice, error) {
 	if self.r == nil {
 		return nil, errors.New("Session http request is not initialized.")
 	}
@@ -74,8 +74,8 @@ func (self *SessionBtnNav) Client() (connmgr.ClientDevice, error) {
 	return clnt, nil
 }
 
-func (self *SessionBtnNav) CanConnect(ctx context.Context) bool {
-	clnt, err := self.Client()
+func (self *SessionBtnNav) canConnect(ctx context.Context) bool {
+	clnt, err := self.client()
 	if err != nil {
 		return false
 	}
