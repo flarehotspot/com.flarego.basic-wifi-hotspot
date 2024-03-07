@@ -8,6 +8,7 @@
                 Data Mbytes: <input type="number" v-model="s.data_mb" required>
             </div>
             <button type="button" @click="addEntry">Add Denomination</button>
+            <button type="button" @click="deleteEntry">Delete Denomination</button>
             <br>
             <button type="submit">Submit</button>
         </form>
@@ -21,9 +22,16 @@ define(function () {
         methods: {
             addEntry: function () {
                 this.flareView.data.push({
-                    amount: 0,
+                    amount: 0.0,
                     time_mins: 0,
                     data_mb: 0
+                })
+            },
+            deleteEntry:function() {
+                this.flareView.data.pop({
+                    amount: 0.0,
+                    time_mins:0,
+                    data_mb:0
                 })
             },
             submit: function () {
