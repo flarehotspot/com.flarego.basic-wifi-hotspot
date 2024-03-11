@@ -19,6 +19,7 @@ func PaymentRecevied(api sdkplugin.PluginApi) http.HandlerFunc {
 		}
 
 		var paymentSettings utils.PaymentSettings
+
 		err = api.Config().Plugin().ReadJson(&paymentSettings)
 		if err != nil {
 			res.Error(w, err.Error(), http.StatusUnprocessableEntity)
@@ -45,11 +46,10 @@ func PaymentRecevied(api sdkplugin.PluginApi) http.HandlerFunc {
 		}
 
 		if purchaseState.TotalPayment > 0 {
-			tens, fives, ones := divideIntoTensFivesOnes(int(purchaseState.TotalPayment))
-			totaldata := float64(tens)*dataPoints[2] + float64(fives)*dataPoints[1] + float64(ones)*dataPoints[0]
-			totalamount := float64(tens)*timeSamples[2] + float64(fives)*timeSamples[1] + float64(ones)*timeSamples[0]
 
-			err = api.SessionsMgr().CreateSession(r.Context(), clnt.Id(), 0, uint(float64(totalamount)), float64(totaldata), nil, 10, 10, false)
+			totalData, totalAmount := divideIntoTimeData(float64(purchaseState.TotalPayment), paymentSettings)
+
+			err = api.SessionsMgr().CreateSession(r.Context(), clnt.Id(), 0, uint(totalAmount), totalData, nil, 10, 10, false)
 			if err != nil {
 				res.Error(w, err.Error(), 500)
 				return
@@ -65,25 +65,5 @@ func PaymentRecevied(api sdkplugin.PluginApi) http.HandlerFunc {
 			return
 		}
 		res.SendFlashMsg(w, "success", "Payment received", http.StatusOK)
-	}
-}
-
-func StartSession(api sdkplugin.PluginApi) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		res := api.Http().VueResponse()
-		clnt, err := api.Http().GetClientDevice(r)
-		if err != nil {
-			res.Error(w, err.Error(), 500)
-			return
-		}
-
-		err = api.SessionsMgr().Connect(clnt)
-		if err != nil {
-			res.Error(w, err.Error(), 500)
-			return
-		}
-
-		res.SetFlashMsg("success", "Session started")
-		res.RedirectToPortal(w)
 	}
 }
