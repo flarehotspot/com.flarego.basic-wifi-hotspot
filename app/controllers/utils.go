@@ -1,6 +1,10 @@
 package controllers
 
-import "github.com/flarehotspot/com.flarego.basic-wifi-hotspot/app/utils"
+import (
+	"sort"
+
+	"github.com/flarehotspot/com.flarego.basic-wifi-hotspot/app/utils"
+)
 
 /*
 Calculates the breakdown of time and data based on the payment amount and the provided
@@ -11,15 +15,27 @@ accumulates the time and data accordingly.
 func divideIntoTimeData(paymentAmount float64, paymentSettings utils.PaymentSettings) (float64, float64) {
 	var totalTime, totalData float64
 
-	for i := len(paymentSettings) - 1; i >= 0; i-- {
+	// Sort paymentSettings by amount in descending order
+	sort.Slice(paymentSettings, func(i, j int) bool {
+		return paymentSettings[i].Amount > paymentSettings[j].Amount
+	})
+
+	for i := range paymentSettings {
 		amount := paymentSettings[i].Amount
 		time := paymentSettings[i].TimeMins
 		data := paymentSettings[i].DataMb
 
-		for paymentAmount >= amount {
-			totalTime += time
-			totalData += data
-			paymentAmount -= amount
+		// Calculate how many times the current amount fits into the remaining payment
+		times := int(paymentAmount / amount)
+
+		// Ensure the times don't exceed the available amount
+		if times > 0 && float64(times)*amount <= paymentAmount {
+			// Deduct the amount used from the total payment
+			paymentAmount -= float64(times) * amount
+
+			// Accumulate time and data based on the calculated times
+			totalTime += float64(times) * time
+			totalData += float64(times) * data
 		}
 	}
 
