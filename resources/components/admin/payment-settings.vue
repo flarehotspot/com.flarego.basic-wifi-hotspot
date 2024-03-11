@@ -9,7 +9,6 @@
                 <button type="button" @click="deleteEntry(s.amount)">Delete Denomination</button>
             </div>
             <button type="button" @click="addEntry">Add Denomination</button>
-            
             <br>
             <button type="submit">Submit</button>
         </form>
@@ -28,13 +27,17 @@ define(function () {
                     data_mb: 0
                 })
             },
-            deleteEntry:function(denom) {
-                var index=this.flareView.data.findIndex(function (item){
-                    return item.amount===denom
-                });
-                if(index!==-1){
-                    this.flareView.denom=denom;
-                    this.flareView.data.splice(index,1);
+            deleteEntry: function(denom) {
+                var index = -1;
+                for (var i = 0; i < this.flareView.data.length; i++) {
+                    if (this.flareView.data[i].amount === denom) {
+                        index = i;
+                        break;     
+                    }
+                }
+                if (index !== -1) {
+                    this.flareView.denom = denom;
+                    this.flareView.data.splice(index, 1); 
                 }
             },
             submit: function () {
