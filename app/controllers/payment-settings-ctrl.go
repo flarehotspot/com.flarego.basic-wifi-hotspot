@@ -3,6 +3,7 @@ package controllers
 import (
 	"encoding/json"
 	"net/http"
+	"sort"
 
 	"github.com/flarehotspot/com.flarego.basic-wifi-hotspot/app/utils"
 	sdkplugin "github.com/flarehotspot/sdk/api/plugin"
@@ -17,6 +18,10 @@ func SavePaymentSettings(api sdkplugin.PluginApi) http.HandlerFunc {
 			return
 		}
 
+		sort.Slice(settings, func(i, j int) bool {
+			return settings[i].Amount > settings[j].Amount
+		})
+
 		err = api.Config().Plugin().Save(&settings)
 		if err != nil {
 			api.Http().VueResponse().Error(w, err.Error(), http.StatusInternalServerError)
@@ -24,6 +29,7 @@ func SavePaymentSettings(api sdkplugin.PluginApi) http.HandlerFunc {
 		}
 
 		res := api.Http().VueResponse()
+
 		res.SendFlashMsg(w, "success", "Settings saved successfully", http.StatusOK)
 	})
 }

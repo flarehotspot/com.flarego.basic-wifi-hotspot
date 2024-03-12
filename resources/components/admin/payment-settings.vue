@@ -3,9 +3,10 @@
         <p v-if="!flareView.data.length">No data.</p>
         <form @submit.prevent="submit">
             <div v-for="s in flareView.data">
-                Amount: <input type="number" v-model="s.amount" required>
-                Time Mins: <input type="number" v-model="s.time_mins" required>
-                Data Mbytes: <input type="number" v-model="s.data_mb" required>
+                Amount: <input type="number" v-model="s.amount" step="0.01" min="0" required>
+                Time Mins: <input type="number" v-model="s.time_mins" step="1" min="0" required>
+                Data Mbytes: <input type="number" v-model="s.data_mb" step="1" min="0" required>
+                <button type="button" @click="deleteEntry(s.amount)">Delete Denomination</button>
             </div>
             <button type="button" @click="addEntry">Add Denomination</button>
             <br>
@@ -21,10 +22,23 @@ define(function () {
         methods: {
             addEntry: function () {
                 this.flareView.data.push({
-                    amount: 0,
+                    amount: 0.0,
                     time_mins: 0,
                     data_mb: 0
                 })
+            },
+            deleteEntry: function (denom) {
+                var index = -1;
+                for (var i = 0; i < this.flareView.data.length; i++) {
+                    if (this.flareView.data[i].amount === denom) {
+                        index = i;
+                        break;
+                    }
+                }
+                if (index !== -1) {
+                    this.flareView.denom = denom;
+                    this.flareView.data.splice(index, 1);
+                }
             },
             submit: function () {
                 var data = this.flareView.data;

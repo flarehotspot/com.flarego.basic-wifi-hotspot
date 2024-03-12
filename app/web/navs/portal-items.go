@@ -10,9 +10,7 @@ import (
 )
 
 func SetPortalItems(api sdkplugin.PluginApi) {
-
 	vrouter := api.Http().VueRouter()
-
 	vrouter.RegisterPortalRoutes([]sdkhttp.VuePortalRoute{
 		{
 			RouteName: "portal.insert-coin",
@@ -46,7 +44,7 @@ func SetPortalItems(api sdkplugin.PluginApi) {
 		navs := []sdkhttp.VuePortalItem{}
 		navs = append(navs, sdkhttp.VuePortalItem{
 			IconPath:  "images/wifi-logo.png",
-			Label:     "insert_coin",
+			Label:     "Insert Coin",
 			RouteName: "portal.insert-coin",
 		})
 
