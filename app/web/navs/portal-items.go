@@ -40,10 +40,19 @@ func SetPortalItems(api sdkplugin.PluginApi) {
 			RoutePath:   "/start-session",
 			HandlerFunc: controllers.StartSession(api),
 		},
+		{
+			RouteName:   "portal.pause-session",
+			RoutePath:   "/pause-session",
+			HandlerFunc: controllers.PauseSession(api),
+		},
 	}...)
 
 	vrouter.PortalItemsFunc(func(r *http.Request) []sdkhttp.VuePortalItem {
 		navs := []sdkhttp.VuePortalItem{}
+		sessionNav := NewSessionBtnNav(api, r)
+		btnText := sessionNav.Text()
+		sessions := sessionNav.Href()
+
 		navs = append(navs, sdkhttp.VuePortalItem{
 			IconPath:  "images/wifi-logo.png",
 			Label:     "Insert Coin",
@@ -52,11 +61,10 @@ func SetPortalItems(api sdkplugin.PluginApi) {
 
 		navs = append(navs, sdkhttp.VuePortalItem{
 			IconPath:  "images/wifi-logo.png",
-			Label:     "Start Session",
-			RouteName: "portal.start-session",
+			Label:     btnText,
+			RouteName: sessions,
 		})
 
 		return navs
 	})
-
 }

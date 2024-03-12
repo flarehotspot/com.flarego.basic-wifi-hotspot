@@ -7,7 +7,7 @@ import (
 
 	// "github.com/flarehotspot/com.flarego.basic-wifi-hotspot/app/routes/names"
 	connmgr "github.com/flarehotspot/sdk/api/connmgr"
-	"github.com/flarehotspot/sdk/api/http"
+	sdkhttp "github.com/flarehotspot/sdk/api/http"
 	plugin "github.com/flarehotspot/sdk/api/plugin"
 )
 
@@ -31,11 +31,11 @@ func (self *SessionBtnNav) Text() string {
 	}
 
 	if self.api.SessionsMgr().IsConnected(clnt) {
-		return "Pause"
+		return "Pause Session"
 	}
 
 	if self.canConnect(self.r.Context()) {
-		return "Connect"
+		return "Start Session"
 	}
 
 	return "No Session"
@@ -51,13 +51,18 @@ func (self *SessionBtnNav) Href() string {
 		return err.Error()
 	}
 
-	if !self.api.SessionsMgr().IsConnected(clnt) {
-		if self.canConnect(self.r.Context()) {
-			return self.api.Http().HttpRouter().UrlForRoute("session.start")
+	/*
+		IsConnected: session is already running
+		canConnect: session is available
+	*/
+	if self.canConnect(self.r.Context()) {
+		if self.api.SessionsMgr().IsConnected(clnt) {
+			return "portal.pause-session"
+		} else {
+			return "portal.start-session"
 		}
-		return "/"
 	} else {
-		return self.api.Http().HttpRouter().UrlForRoute("session.start")
+		return "/"
 	}
 }
 
