@@ -31,8 +31,8 @@ func PaymentRecevied(api sdkplugin.PluginApi) http.HandlerFunc {
 			return
 		}
 
-		timeSamples := make([]float64, len(paymentSettings))
-		dataPoints := make([]float64, len(paymentSettings))
+		timeSamples := make([]int, len(paymentSettings))
+		dataPoints := make([]int, len(paymentSettings))
 
 		for i, value := range paymentSettings {
 			timeSamples[i] = value.TimeMins
@@ -47,9 +47,9 @@ func PaymentRecevied(api sdkplugin.PluginApi) http.HandlerFunc {
 
 		if purchaseState.TotalPayment > 0 {
 
-			totalData, totalTime := divideIntoTimeData(float64(purchaseState.TotalPayment), paymentSettings)
+			totalData, totalTime := utils.DivideIntoTimeData(float64(purchaseState.TotalPayment), paymentSettings)
 
-			err = api.SessionsMgr().CreateSession(r.Context(), clnt.Id(), 0, uint(totalData), totalTime, nil, 10, 10, false)
+			err = api.SessionsMgr().CreateSession(r.Context(), clnt.Id(), 0, uint(totalTime), float64(totalData), nil, 10, 10, false)
 			if err != nil {
 				res.Error(w, err.Error(), 500)
 				return
