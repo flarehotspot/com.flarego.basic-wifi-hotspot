@@ -80,5 +80,5 @@ func (self *SessionBtnNav) CanConnect(ctx context.Context) bool {
 		return false
 	}
 
-	return clnt.HasSession(ctx)
+	return self.api.SessionsMgr().HasSession(ctx, clnt.Id())
 }

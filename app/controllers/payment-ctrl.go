@@ -20,7 +20,7 @@ func PaymentRecevied(api sdkplugin.PluginApi) http.HandlerFunc {
 
 		var paymentSettings utils.PaymentSettings
 
-		err = api.Config().Plugin().ReadJson(&paymentSettings)
+		err = api.Config().Plugin().Get(&paymentSettings)
 		if err != nil {
 			res.Error(w, err.Error(), http.StatusUnprocessableEntity)
 			return
@@ -65,5 +65,24 @@ func PaymentRecevied(api sdkplugin.PluginApi) http.HandlerFunc {
 			return
 		}
 		res.SendFlashMsg(w, "success", "Payment received", http.StatusOK)
+	}
+}
+
+func StartSession(api sdkplugin.PluginApi) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		res := api.Http().VueResponse()
+		clnt, err := api.Http().GetClientDevice(r)
+		if err != nil {
+			res.Error(w, err.Error(), 500)
+			return
+		}
+
+		err = api.SessionsMgr().Connect(r.Context(), clnt, "Session started")
+		if err != nil {
+			res.Error(w, err.Error(), 500)
+			return
+		}
+
+		res.RedirectToPortal(w)
 	}
 }

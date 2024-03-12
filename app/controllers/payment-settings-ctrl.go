@@ -22,7 +22,7 @@ func SavePaymentSettings(api sdkplugin.PluginApi) http.HandlerFunc {
 			return settings[i].Amount > settings[j].Amount
 		})
 
-		err = api.Config().Plugin().WriteJson(&settings)
+		err = api.Config().Plugin().Save(&settings)
 		if err != nil {
 			api.Http().VueResponse().Error(w, err.Error(), http.StatusInternalServerError)
 			return
