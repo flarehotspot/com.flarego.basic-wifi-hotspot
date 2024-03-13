@@ -25,17 +25,17 @@ func (self *SessionBtnNav) IconPath() string {
 }
 
 func (self *SessionBtnNav) Text() string {
-	clnt, err := self.Client()
+	clnt, err := self.client()
 	if err != nil {
 		return err.Error()
 	}
 
 	if self.api.SessionsMgr().IsConnected(clnt) {
-		return "Pause"
+		return "Pause Session"
 	}
 
-	if self.CanConnect(self.r.Context()) {
-		return "Connect"
+	if self.canConnect(self.r.Context()) {
+		return "Start Session"
 	}
 
 	return "No Session"
@@ -46,22 +46,27 @@ func (self *SessionBtnNav) Description() string {
 }
 
 func (self *SessionBtnNav) Href() string {
-	clnt, err := self.Client()
+	clnt, err := self.client()
 	if err != nil {
 		return err.Error()
 	}
 
-	if !self.api.SessionsMgr().IsConnected(clnt) {
-		if self.CanConnect(self.r.Context()) {
-			return self.api.Http().HttpRouter().UrlForRoute("session.start")
+	/*
+		IsConnected: session is already running
+		canConnect: session is available
+	*/
+	if self.canConnect(self.r.Context()) {
+		if self.api.SessionsMgr().IsConnected(clnt) {
+			return "portal.pause-session"
+		} else {
+			return "portal.start-session"
 		}
-		return "/"
 	} else {
-		return self.api.Http().HttpRouter().UrlForRoute("session.start")
+		return "/"
 	}
 }
 
-func (self *SessionBtnNav) Client() (connmgr.ClientDevice, error) {
+func (self *SessionBtnNav) client() (connmgr.ClientDevice, error) {
 	if self.r == nil {
 		return nil, errors.New("Session http request is not initialized.")
 	}
@@ -74,8 +79,8 @@ func (self *SessionBtnNav) Client() (connmgr.ClientDevice, error) {
 	return clnt, nil
 }
 
-func (self *SessionBtnNav) CanConnect(ctx context.Context) bool {
-	clnt, err := self.Client()
+func (self *SessionBtnNav) canConnect(ctx context.Context) bool {
+	clnt, err := self.client()
 	if err != nil {
 		return false
 	}
