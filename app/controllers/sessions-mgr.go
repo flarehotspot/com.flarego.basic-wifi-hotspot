@@ -11,6 +11,7 @@ func StartSession(api sdkplugin.PluginApi) http.HandlerFunc {
 		//start
 		res := api.Http().VueResponse()
 		clnt, err := api.Http().GetClientDevice(r)
+
 		if err != nil {
 			res.Error(w, err.Error(), http.StatusUnprocessableEntity)
 			return
@@ -18,17 +19,15 @@ func StartSession(api sdkplugin.PluginApi) http.HandlerFunc {
 
 		if api.SessionsMgr().IsConnected(clnt) {
 			msg := "You are already connected to the internet."
-			res.SendFlashMsg(w, "error", msg, 500)
+			res.SetFlashMsg("error", msg)
 			return
 		}
 
-		err = api.SessionsMgr().Connect(r.Context(), clnt, "Gets client device")
+		err = api.SessionsMgr().Connect(r.Context(), clnt, "You are now connected to internet.")
 		if err != nil {
 			res.Error(w, err.Error(), 500)
 			return
 		}
-		msg := "You are now connected to internet."
-		res.SetFlashMsg("success", msg)
 
 		res.RedirectToPortal(w)
 	}
@@ -54,7 +53,7 @@ func PauseSession(api sdkplugin.PluginApi) http.HandlerFunc {
 		msg := "You are now disconnected to internet."
 		err = api.SessionsMgr().Disconnect(r.Context(), clnt, msg)
 		if err != nil {
-			res.SetFlashMsg("error", "Cannot disconnect to internet")
+			res.SetFlashMsg("error", err.Error())
 			return
 		}
 		res.RedirectToPortal(w)
