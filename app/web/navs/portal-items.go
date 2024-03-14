@@ -9,6 +9,40 @@ import (
 	sdkplugin "github.com/flarehotspot/sdk/api/plugin"
 )
 
+func TextBtn(api sdkplugin.PluginApi, r *http.Request) string {
+	clnt, err := api.Http().GetClientDevice(r)
+	if err != nil {
+		return err.Error()
+	}
+
+	if api.SessionsMgr().IsConnected(clnt) {
+		return "Pause Session"
+	}
+
+	if api.SessionsMgr().HasSession(r.Context(), clnt.Id()) {
+		return "Start Session"
+	}
+
+	return ""
+}
+
+func SessionRoute(api sdkplugin.PluginApi, r *http.Request) string {
+	clnt, err := api.Http().GetClientDevice(r)
+	if err != nil {
+		return err.Error()
+	}
+
+	if api.SessionsMgr().HasSession(r.Context(), clnt.Id()) {
+		if api.SessionsMgr().IsConnected(clnt) {
+			return "portal.pause-session"
+		} else {
+			return "portal.start-session"
+		}
+	} else {
+		return "/"
+	}
+}
+
 func SetPortalItems(api sdkplugin.PluginApi) {
 	vrouter := api.Http().VueRouter()
 	vrouter.RegisterPortalRoutes([]sdkhttp.VuePortalRoute{
@@ -46,10 +80,9 @@ func SetPortalItems(api sdkplugin.PluginApi) {
 	}...)
 
 	vrouter.PortalItemsFunc(func(r *http.Request) []sdkhttp.VuePortalItem {
+
 		navs := []sdkhttp.VuePortalItem{}
-		sessions := NewSessionBtnNav(api, r)
-		textBtn := sessions.Text()
-		sessionsName := sessions.Href()
+
 		navs = append(navs, sdkhttp.VuePortalItem{
 			IconPath:  "images/wifi-logo.png",
 			Label:     "Insert Coin",
@@ -58,9 +91,13 @@ func SetPortalItems(api sdkplugin.PluginApi) {
 
 		navs = append(navs, sdkhttp.VuePortalItem{
 			IconPath:  "images/wifi-logo.png",
-			Label:     textBtn,
-			RouteName: sessionsName,
+			Label:     TextBtn(api, r),
+			RouteName: SessionRoute(api, r),
 		})
+
+		if TextBtn(api, r) == "" {
+			navs = append(navs[:1], navs[2:]...)
+		}
 
 		return navs
 	})
