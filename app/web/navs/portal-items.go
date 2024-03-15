@@ -1,6 +1,7 @@
 package navs
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/flarehotspot/com.flarego.basic-wifi-hotspot/app/controllers"
@@ -38,21 +39,40 @@ func SetPortalItems(api sdkplugin.PluginApi) {
 			RoutePath:   "/start-session",
 			HandlerFunc: controllers.StartSession(api),
 		},
+		{
+			RouteName:   "portal.pause-session",
+			RoutePath:   "/pause-session",
+			HandlerFunc: controllers.PauseSession(api),
+		},
 	}...)
 
 	vrouter.PortalItemsFunc(func(r *http.Request) []sdkhttp.VuePortalItem {
 		navs := []sdkhttp.VuePortalItem{}
+		clnt, err := api.Http().GetClientDevice(r)
+		if err != nil {
+			log.Println(err)
+			return navs
+		}
+
 		navs = append(navs, sdkhttp.VuePortalItem{
 			IconPath:  "images/wifi-logo.png",
 			Label:     "Insert Coin",
 			RouteName: "portal.insert-coin",
 		})
 
-		navs = append(navs, sdkhttp.VuePortalItem{
-			IconPath:  "images/wifi-logo.png",
-			Label:     "Start Session",
-			RouteName: "portal.start-session",
-		})
+		if api.SessionsMgr().IsConnected(clnt) {
+			navs = append(navs, sdkhttp.VuePortalItem{
+				IconPath:  "images/wifi-logo.png",
+				Label:     "Pause Session",
+				RouteName: "portal.pause-session",
+			})
+		} else if api.SessionsMgr().HasSession(r.Context(), clnt.Id()) {
+			navs = append(navs, sdkhttp.VuePortalItem{
+				IconPath:  "images/wifi-logo.png",
+				Label:     "Start Session",
+				RouteName: "portal.start-session",
+			})
+		}
 
 		return navs
 	})
