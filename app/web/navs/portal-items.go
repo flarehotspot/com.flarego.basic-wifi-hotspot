@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/flarehotspot/com.flarego.basic-wifi-hotspot/app/controllers"
+	"github.com/flarehotspot/com.flarego.basic-wifi-hotspot/app/utils"
 	sdkhttp "github.com/flarehotspot/sdk/api/http"
 	sdkpayments "github.com/flarehotspot/sdk/api/payments"
 	sdkplugin "github.com/flarehotspot/sdk/api/plugin"
@@ -73,6 +74,9 @@ func SetPortalItems(api sdkplugin.PluginApi) {
 				RouteName: "portal.start-session",
 			})
 		}
+
+		// reload portal when session connected or disconnected
+		go utils.PortalReload(api, clnt)
 
 		return navs
 	})
