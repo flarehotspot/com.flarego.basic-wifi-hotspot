@@ -13,6 +13,6 @@ func main() {}
 func Init(api plugin.PluginApi) {
 	routes.PortalRoutes(api)
 	routes.AdminRoutes(api)
-    navs.SetAdminNavs(api)
+	navs.SetAdminNavs(api)
 	navs.SetPortalItems(api)
 }

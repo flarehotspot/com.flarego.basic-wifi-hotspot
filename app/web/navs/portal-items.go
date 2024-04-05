@@ -63,7 +63,7 @@ func SetPortalItems(api sdkplugin.PluginApi) {
 				Label:     "Pause Session",
 				RouteName: "portal.pause-session",
 			})
-		} else if api.SessionsMgr().HasSession(context.Background(), clnt.Id()) {
+		} else if _, err := api.SessionsMgr().GetSession(context.Background(), clnt); err == nil {
 			navs = append(navs, sdkhttp.VuePortalItem{
 				IconPath:  "images/wifi-logo.png",
 				Label:     "Start Session",
