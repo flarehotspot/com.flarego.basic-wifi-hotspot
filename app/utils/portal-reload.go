@@ -1,21 +1,21 @@
 package utils
 
 import (
-	"sync/atomic"
+	"sync"
 
 	sdkconnmgr "github.com/flarehotspot/sdk/api/connmgr"
 	sdkplugin "github.com/flarehotspot/sdk/api/plugin"
 )
 
 var (
-	isSubscribed = atomic.Bool{}
+	subscribers = sync.Map{}
 )
 
 // Reload portal when session connected or disconnected
 func PortalReload(api sdkplugin.PluginApi, clnt sdkconnmgr.ClientDevice) {
-	if !isSubscribed.Load() {
-		isSubscribed.Store(true)
-
+	_, ok := subscribers.Load(clnt.MacAddr())
+	if !ok {
+		subscribers.Store(clnt.MacAddr(), true)
 		connectedCh := clnt.Subscribe("session:connected")
 		disconnCh := clnt.Subscribe("session:disconnected")
 
