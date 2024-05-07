@@ -10,15 +10,10 @@ import (
 )
 
 func AdminRoutes(api plugin.PluginApi) {
-	api.Http().HttpRouter().AdminRouter().
-		Post("/payment-settings/save", controllers.SavePaymentSettings(api)).
-		Name("admin.payment-settings.save")
+	adminR := api.Http().HttpRouter().AdminRouter()
 
-	api.Http().VueRouter().RegisterAdminRoutes(sdkhttp.VueAdminRoute{
-		RouteName: "admin.payment-settings",
-		RoutePath: "/payment-settings",
-		Component: "admin/payment-settings.vue",
-		HandlerFunc: func(w http.ResponseWriter, r *http.Request) {
+	adminR.Group("/payment-settings", func(subrouter sdkhttp.HttpRouterInstance) {
+		subrouter.Get("/", func(w http.ResponseWriter, r *http.Request) {
 			res := api.Http().VueResponse()
 
 			var settings utils.PaymentSettings
@@ -29,6 +24,17 @@ func AdminRoutes(api plugin.PluginApi) {
 			}
 
 			res.Json(w, settings, http.StatusOK)
-		},
+		}).Name("admin.payment-settings.get")
+
+		subrouter.
+			Post("/payment-settings/save", controllers.SavePaymentSettings(api)).
+			Name("admin.payment-settings.save")
+	})
+
+	api.Http().VueRouter().RegisterAdminRoutes(sdkhttp.VueAdminRoute{
+		RouteName: "admin.payment-settings",
+		RoutePath: "/payment-settings",
+		Component: "admin/payment-settings.vue",
+		// HandlerFunc: ,
 	})
 }

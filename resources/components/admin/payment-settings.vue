@@ -17,8 +17,12 @@
 <script>
 define(function () {
     return {
-        props: ['flareView'],
         template: template,
+        mounted: function(){
+            $flare.http.get('<% .Helpers.UrlForRoute "admin.payment-settings.get" %>').then(function(data) {
+                console.log(data)
+            })
+        },
         methods: {
             addEntry: function () {
                 this.flareView.data.push({
