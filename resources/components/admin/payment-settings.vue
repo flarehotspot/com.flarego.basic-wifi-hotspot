@@ -1,8 +1,8 @@
 <template>
     <div>
-        <p v-if="!flareView.data.length">No data.</p>
+        <p v-if="!data.length">No data.</p>
         <form @submit.prevent="submit">
-            <div v-for="s in flareView.data">
+            <div v-for="s in data">
                 Amount: <input type="number" v-model="s.amount" step="0.01" min="0" required>
                 Time Mins: <input type="number" v-model="s.time_mins" step="1" min="0" required>
                 Data Mbytes: <input type="number" v-model="s.data_mb" step="1" min="0" required>
@@ -18,14 +18,22 @@
 define(function () {
     return {
         template: template,
+        data: function(){
+            return {
+                data: [],
+                denom: null
+            }
+        },
         mounted: function(){
+            var self = this;
             $flare.http.get('<% .Helpers.UrlForRoute "admin.payment-settings.get" %>').then(function(data) {
                 console.log(data)
+                self.data = data;
             })
         },
         methods: {
             addEntry: function () {
-                this.flareView.data.push({
+                this.data.push({
                     amount: 0.0,
                     time_mins: 0,
                     data_mb: 0
@@ -33,19 +41,19 @@ define(function () {
             },
             deleteEntry: function (denom) {
                 var index = -1;
-                for (var i = 0; i < this.flareView.data.length; i++) {
-                    if (this.flareView.data[i].amount === denom) {
+                for (var i = 0; i < this.data.length; i++) {
+                    if (this.data[i].amount === denom) {
                         index = i;
                         break;
                     }
                 }
                 if (index !== -1) {
-                    this.flareView.denom = denom;
-                    this.flareView.data.splice(index, 1);
+                    this.denom = denom;
+                    this.data.splice(index, 1);
                 }
             },
             submit: function () {
-                var data = this.flareView.data;
+                var data = this.data;
                 for (var i = 0; i < data.length; i++) {
                     data[i] = {
                         amount: data[i].amount * 1,
@@ -53,8 +61,8 @@ define(function () {
                         data_mb: data[i].data_mb * 1
                     };
                 }
-                window.$flare.http.post('<% .Helpers.UrlForRoute "admin.payment-settings.save" %>', data).catch(function (err) {
-                    console.log(err)
+                $flare.http.post('<% .Helpers.UrlForRoute "admin.payment-settings.save" %>', data).catch(function (err) {
+                    console.error(err)
                 })
             }
         }

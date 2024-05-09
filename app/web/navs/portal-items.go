@@ -34,24 +34,22 @@ func SetPortalItems(api sdkplugin.PluginApi) {
 			RouteName: "portal.insert-coin",
 			RoutePath: "/insert-coin",
 			Component: "portal/InsertCoin.vue",
-			// HandlerFunc: ,
 		},
-		// {
-		// 	RouteName:   "portal.purchase-callback",
-		// 	RoutePath:   "/purchase-callback",
-		// 	Component:   "portal/PurchaseCallback.vue",
-		// 	HandlerFunc: controllers.PaymentRecevied(api),
-		// },
-		// {
-		// 	RouteName:   "portal.start-session",
-		// 	RoutePath:   "/start-session",
-		// 	HandlerFunc: controllers.StartSession(api),
-		// },
-		// {
-		// 	RouteName:   "portal.pause-session",
-		// 	RoutePath:   "/pause-session",
-		// 	HandlerFunc: controllers.PauseSession(api),
-		// },
+		{
+			RouteName: "portal.purchase-callback",
+			RoutePath: "/purchase-callback",
+			Component: "portal/PurchaseCallback.vue",
+		},
+		{
+			RouteName: "portal.start-session",
+			RoutePath: "/start-session",
+			Component: "portal/StartSession.vue",
+		},
+		{
+			RouteName: "portal.pause-session",
+			RoutePath: "/pause-session",
+			Component: "portal/PauseSession.vue",
+		},
 	}...)
 
 	vrouter.PortalItemsFunc(func(clnt sdkconnmgr.ClientDevice) []sdkhttp.VuePortalItem {
