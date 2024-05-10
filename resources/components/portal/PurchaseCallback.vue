@@ -8,7 +8,12 @@
 <script>
 define(function () {
     return {
-        template: template
+        template: template,
+        mounted: function() {
+            $flare.http.get('<% .Helpers.UrlForRoute "portal.purchase.callback" %>').catch(function(err) {
+                console.log(err);
+            })
+        }
     };
 });
 </script>

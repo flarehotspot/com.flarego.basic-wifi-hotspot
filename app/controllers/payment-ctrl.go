@@ -5,12 +5,25 @@ import (
 	"net/http"
 
 	"github.com/flarehotspot/com.flarego.basic-wifi-hotspot/app/utils"
+	sdkpayments "github.com/flarehotspot/sdk/api/payments"
 	sdkplugin "github.com/flarehotspot/sdk/api/plugin"
 )
 
+func PurchaseWifiSession(api sdkplugin.PluginApi) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		p := sdkpayments.PurchaseRequest{
+			Sku:                  "wifi-connection",
+			Name:                 "WiFi Connection",
+			Description:          "Basic Wifi Hotspot",
+			AnyPrice:             true,
+			CallbackVueRouteName: "portal.purchase-callback",
+		}
+		api.Payments().Checkout(w, r, p)
+	}
+}
+
 func PaymentRecevied(api sdkplugin.PluginApi) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-
 		res := api.Http().VueResponse()
 		clnt, err := api.Http().GetClientDevice(r)
 		if err != nil {
@@ -25,6 +38,7 @@ func PaymentRecevied(api sdkplugin.PluginApi) http.HandlerFunc {
 			res.Error(w, err.Error(), http.StatusUnprocessableEntity)
 			return
 		}
+
 		purchase, err := api.Payments().GetPendingPurchase(r)
 		if err != nil {
 			res.Error(w, err.Error(), 500)
@@ -46,9 +60,7 @@ func PaymentRecevied(api sdkplugin.PluginApi) http.HandlerFunc {
 		}
 
 		if purchaseState.TotalPayment > 0 {
-
 			totalData, totalTime := utils.DivideIntoTimeData(float64(purchaseState.TotalPayment), paymentSettings)
-
 			err = api.SessionsMgr().CreateSession(r.Context(), clnt.Id(), 0, uint(totalTime), float64(totalData), nil, 10, 10, false)
 			if err != nil {
 				res.Error(w, err.Error(), 500)
@@ -64,6 +76,7 @@ func PaymentRecevied(api sdkplugin.PluginApi) http.HandlerFunc {
 			res.Error(w, err.Error(), 500)
 			return
 		}
+
 		res.SendFlashMsg(w, "success", "Payment received", http.StatusOK)
 	}
 }
