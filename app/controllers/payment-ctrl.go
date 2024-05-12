@@ -31,9 +31,7 @@ func PaymentRecevied(api sdkplugin.PluginApi) http.HandlerFunc {
 			return
 		}
 
-		var paymentSettings utils.PaymentSettings
-
-		err = api.Config().Plugin("default").Get(&paymentSettings)
+		paymentSettings, err := utils.GetPaymentConfig(api)
 		if err != nil {
 			res.Error(w, err.Error(), http.StatusUnprocessableEntity)
 			return

@@ -13,10 +13,9 @@ func GetPaymentSettings(api sdkplugin.PluginApi) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		res := api.Http().VueResponse()
 
-		var settings utils.PaymentSettings
-		err := api.Config().Plugin("default").Get(&settings)
+		settings, err := utils.GetPaymentConfig(api)
 		if err != nil {
-			res.Json(w, utils.DefaultPaymentSettings, http.StatusOK)
+			res.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
 
@@ -37,7 +36,7 @@ func SavePaymentSettings(api sdkplugin.PluginApi) http.HandlerFunc {
 			return settings[i].Amount > settings[j].Amount
 		})
 
-		err = api.Config().Plugin("default").Save(&settings)
+		err = api.Config().Custom("default").Save(&settings)
 		if err != nil {
 			api.Http().VueResponse().Error(w, err.Error(), http.StatusInternalServerError)
 			return

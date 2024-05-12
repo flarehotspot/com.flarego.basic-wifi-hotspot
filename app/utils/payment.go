@@ -1,6 +1,12 @@
 package utils
 
-import "sort"
+import (
+	"errors"
+	"sort"
+
+	sdkcfg "github.com/flarehotspot/sdk/api/config"
+	sdkplugin "github.com/flarehotspot/sdk/api/plugin"
+)
 
 type PaymentSettings []struct {
 	Amount   float64 `json:"amount"`
@@ -8,7 +14,13 @@ type PaymentSettings []struct {
 	TimeMins int     `json:"time_mins"`
 }
 
-var DefaultPaymentSettings = PaymentSettings{}
+var DefaultPaymentSettings = PaymentSettings{
+	{
+		Amount:   1,
+		DataMb:   10,
+		TimeMins: 15,
+	},
+}
 
 /*
 Calculates the breakdown of time and data based on the payment amount and the provided
@@ -44,4 +56,19 @@ func DivideIntoTimeData(paymentAmount float64, paymentSettings PaymentSettings) 
 	}
 
 	return totalTime, totalData
+}
+
+func GetPaymentConfig(api sdkplugin.PluginApi) (PaymentSettings, error) {
+	var settings PaymentSettings
+	err := api.Config().Custom("default").Get(&settings)
+
+	if errors.Is(err, sdkcfg.ErrNoConfig) {
+		return DefaultPaymentSettings, nil
+	}
+
+	if err != nil {
+		return DefaultPaymentSettings, err
+	}
+
+	return settings, nil
 }
