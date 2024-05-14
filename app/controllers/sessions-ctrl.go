@@ -29,7 +29,11 @@ func StartSession(api sdkplugin.PluginApi) http.HandlerFunc {
 			return
 		}
 
-		res.RedirectToPortal(w)
+		data := map[string]string{
+			"redirect_url": "http://google.com",
+		}
+
+		res.Json(w, data, http.StatusOK)
 	}
 }
 
