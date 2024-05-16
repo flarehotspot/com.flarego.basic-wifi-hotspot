@@ -28,9 +28,7 @@ payment settings. It iterates over the payment settings in reverse order, starti
 denomination, and deducts the amount from the payment until it can't be deducted anymore. Then, it
 accumulates the time and data accordingly.
 */
-func DivideIntoTimeData(paymentAmount float64, paymentSettings PaymentSettings) (int, int) {
-	var totalTime, totalData int
-
+func DivideIntoTimeData(paymentAmount float64, paymentSettings PaymentSettings) (totalSecs uint, totalMbytes uint) {
 	// Sort paymentSettings by amount in descending order
 	sort.Slice(paymentSettings, func(i, j int) bool {
 		return paymentSettings[i].Amount > paymentSettings[j].Amount
@@ -38,11 +36,11 @@ func DivideIntoTimeData(paymentAmount float64, paymentSettings PaymentSettings) 
 
 	for i := range paymentSettings {
 		amount := paymentSettings[i].Amount
-		time := paymentSettings[i].TimeMins
-		data := paymentSettings[i].DataMb
+		minutes := uint(paymentSettings[i].TimeMins)
+		mbytes := uint(paymentSettings[i].DataMb)
 
 		// Calculate how many times the current amount fits into the remaining payment
-		times := int(paymentAmount / amount)
+		times := uint(paymentAmount / amount)
 
 		// Ensure the times don't exceed the available amount
 		if times > 0 && float64(times)*amount <= paymentAmount {
@@ -50,12 +48,12 @@ func DivideIntoTimeData(paymentAmount float64, paymentSettings PaymentSettings) 
 			paymentAmount -= float64(times) * amount
 
 			// Accumulate time and data based on the calculated times
-			totalTime += times * time
-			totalData += times * data
+			totalSecs += times * minutes * 60
+			totalMbytes += times * mbytes
 		}
 	}
 
-	return totalTime, totalData
+	return totalSecs, totalMbytes
 }
 
 func GetPaymentConfig(api sdkplugin.PluginApi) (PaymentSettings, error) {

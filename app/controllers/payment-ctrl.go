@@ -58,8 +58,8 @@ func PaymentRecevied(api sdkplugin.PluginApi) http.HandlerFunc {
 		}
 
 		if purchaseState.TotalPayment > 0 {
-			totalData, totalTime := utils.DivideIntoTimeData(float64(purchaseState.TotalPayment), paymentSettings)
-			err = api.SessionsMgr().CreateSession(r.Context(), clnt.Id(), 0, uint(totalTime), float64(totalData), nil, 10, 10, false)
+			totalSecs, totalMbytes := utils.DivideIntoTimeData(float64(purchaseState.TotalPayment), paymentSettings)
+			err = api.SessionsMgr().CreateSession(r.Context(), clnt.Id(), 0, uint(totalSecs), float64(totalMbytes), nil, 10, 10, false)
 			if err != nil {
 				res.Error(w, err.Error(), 500)
 				return
