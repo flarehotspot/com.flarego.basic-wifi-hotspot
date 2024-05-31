@@ -4,7 +4,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/flarehotspot/com.flarego.basic-wifi-hotspot/app/utils"
+	"com.flarego.basic-wifi-hotspot/app/utils"
 	sdkpayments "sdk/api/payments"
 	sdkplugin "sdk/api/plugin"
 )

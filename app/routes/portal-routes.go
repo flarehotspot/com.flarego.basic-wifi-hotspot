@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"github.com/flarehotspot/com.flarego.basic-wifi-hotspot/app/controllers"
+	"com.flarego.basic-wifi-hotspot/app/controllers"
 	sdkhttp "sdk/api/http"
 	plugin "sdk/api/plugin"
 )

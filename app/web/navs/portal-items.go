@@ -4,8 +4,7 @@ import (
 	"context"
 	"net/http"
 
-	// "github.com/flarehotspot/com.flarego.basic-wifi-hotspot/app/controllers"
-	"github.com/flarehotspot/com.flarego.basic-wifi-hotspot/app/utils"
+	"com.flarego.basic-wifi-hotspot/app/utils"
 	sdkconnmgr "sdk/api/connmgr"
 	sdkhttp "sdk/api/http"
 	sdkpayments "sdk/api/payments"

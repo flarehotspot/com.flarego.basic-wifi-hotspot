@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"sort"
 
-	"github.com/flarehotspot/com.flarego.basic-wifi-hotspot/app/utils"
+	"com.flarego.basic-wifi-hotspot/app/utils"
 	sdkplugin "sdk/api/plugin"
 )
 
