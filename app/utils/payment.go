@@ -4,8 +4,8 @@ import (
 	"errors"
 	"sort"
 
-	sdkcfg "github.com/flarehotspot/sdk/api/config"
-	sdkplugin "github.com/flarehotspot/sdk/api/plugin"
+	sdkcfg "sdk/api/config"
+	sdkplugin "sdk/api/plugin"
 )
 
 type PaymentSettings []struct {

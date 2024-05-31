@@ -5,8 +5,8 @@ import (
 	"net/http"
 
 	"github.com/flarehotspot/com.flarego.basic-wifi-hotspot/app/utils"
-	sdkpayments "github.com/flarehotspot/sdk/api/payments"
-	sdkplugin "github.com/flarehotspot/sdk/api/plugin"
+	sdkpayments "sdk/api/payments"
+	sdkplugin "sdk/api/plugin"
 )
 
 func PurchaseWifiSession(api sdkplugin.PluginApi) http.HandlerFunc {

@@ -5,7 +5,7 @@ package main
 import (
 	"github.com/flarehotspot/com.flarego.basic-wifi-hotspot/app/routes"
 	"github.com/flarehotspot/com.flarego.basic-wifi-hotspot/app/web/navs"
-	plugin "github.com/flarehotspot/sdk/api/plugin"
+	plugin "sdk/api/plugin"
 )
 
 func main() {}

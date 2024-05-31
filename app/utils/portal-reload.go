@@ -3,8 +3,8 @@ package utils
 import (
 	"sync"
 
-	sdkconnmgr "github.com/flarehotspot/sdk/api/connmgr"
-	sdkplugin "github.com/flarehotspot/sdk/api/plugin"
+	sdkconnmgr "sdk/api/connmgr"
+	sdkplugin "sdk/api/plugin"
 )
 
 var (
