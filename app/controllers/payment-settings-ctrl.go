@@ -6,7 +6,7 @@ import (
 	"sort"
 
 	"github.com/flarehotspot/com.flarego.basic-wifi-hotspot/app/utils"
-	sdkplugin "github.com/flarehotspot/sdk/api/plugin"
+	sdkplugin "sdk/api/plugin"
 )
 
 func GetPaymentSettings(api sdkplugin.PluginApi) http.HandlerFunc {

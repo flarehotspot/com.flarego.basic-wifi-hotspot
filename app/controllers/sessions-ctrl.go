@@ -3,7 +3,7 @@ package controllers
 import (
 	"net/http"
 
-	sdkplugin "github.com/flarehotspot/sdk/api/plugin"
+	sdkplugin "sdk/api/plugin"
 )
 
 func StartSession(api sdkplugin.PluginApi) http.HandlerFunc {

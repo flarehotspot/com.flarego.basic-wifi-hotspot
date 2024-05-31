@@ -6,10 +6,10 @@ import (
 
 	// "github.com/flarehotspot/com.flarego.basic-wifi-hotspot/app/controllers"
 	"github.com/flarehotspot/com.flarego.basic-wifi-hotspot/app/utils"
-	sdkconnmgr "github.com/flarehotspot/sdk/api/connmgr"
-	sdkhttp "github.com/flarehotspot/sdk/api/http"
-	sdkpayments "github.com/flarehotspot/sdk/api/payments"
-	sdkplugin "github.com/flarehotspot/sdk/api/plugin"
+	sdkconnmgr "sdk/api/connmgr"
+	sdkhttp "sdk/api/http"
+	sdkpayments "sdk/api/payments"
+	sdkplugin "sdk/api/plugin"
 )
 
 func SetPortalItems(api sdkplugin.PluginApi) {

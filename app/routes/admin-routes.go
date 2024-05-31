@@ -2,8 +2,8 @@ package routes
 
 import (
 	"github.com/flarehotspot/com.flarego.basic-wifi-hotspot/app/controllers"
-	sdkhttp "github.com/flarehotspot/sdk/api/http"
-	plugin "github.com/flarehotspot/sdk/api/plugin"
+	sdkhttp "sdk/api/http"
+	plugin "sdk/api/plugin"
 )
 
 func AdminRoutes(api plugin.PluginApi) {

@@ -1,9 +1,9 @@
 package navs
 
 import (
-	sdkacct "github.com/flarehotspot/sdk/api/accounts"
-	sdkhttp "github.com/flarehotspot/sdk/api/http"
-	sdkplugin "github.com/flarehotspot/sdk/api/plugin"
+	sdkacct "sdk/api/accounts"
+	sdkhttp "sdk/api/http"
+	sdkplugin "sdk/api/plugin"
 )
 
 func SetAdminNavs(api sdkplugin.PluginApi) {
