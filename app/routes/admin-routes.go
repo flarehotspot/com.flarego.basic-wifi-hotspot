@@ -1,27 +1,27 @@
 package routes
 
 import (
-	"com.flarego.basic-wifi-hotspot/app/controllers"
-	sdkhttp "sdk/api/http"
-	plugin "sdk/api/plugin"
+	sdkapi "sdk/api"
 )
 
-func AdminRoutes(api plugin.PluginApi) {
-	adminR := api.Http().HttpRouter().AdminRouter()
+func AdminRoutes(api sdkapi.IPluginApi) {
+	// adminR := api.Http().HttpRouter().AdminRouter()
 
-	adminR.Group("/payment-settings", func(subrouter sdkhttp.HttpRouterInstance) {
-		subrouter.
-			Get("/", controllers.GetPaymentSettings(api)).
-			Name("admin.payment-settings.get")
+	// adminR.Group("/payment-settings", func(subrouter sdkhttp.HttpRouterInstance) {
+	// 	subrouter.
+	// 		Get("/", controllers.GetPaymentSettings(api)).
+	// 		Name("admin.payment-settings.get")
 
-		subrouter.
-			Post("/payment-settings/save", controllers.SavePaymentSettings(api)).
-			Name("admin.payment-settings.save")
-	})
+	// 	subrouter.
+	// 		Post("/payment-settings/save", controllers.SavePaymentSettings(api)).
+	// 		Name("admin.payment-settings.save")
+	// })
 
-	api.Http().VueRouter().RegisterAdminRoutes(sdkhttp.VueAdminRoute{
-		RouteName: "admin.payment-settings",
-		RoutePath: "/payment-settings",
-		Component: "admin/payment-settings.vue",
-	})
+	// api.Http().VueRouter().RegisterAdminRoutes(sdkhttp.VueAdminRoute{
+	// 	RouteName: "admin.payment-settings",
+	// 	RoutePath: "/payment-settings",
+	// 	Component: "admin/payment-settings.vue",
+	// })
+
+	//    api.Http().HttpRouter().PluginRouter().Group("/payments")
 }

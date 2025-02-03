@@ -1,11 +1,8 @@
 package utils
 
 import (
-	"errors"
+	sdkapi "sdk/api"
 	"sort"
-
-	sdkcfg "sdk/api/config"
-	sdkplugin "sdk/api/plugin"
 )
 
 type PaymentSettings []struct {
@@ -56,17 +53,17 @@ func DivideIntoTimeData(paymentAmount float64, paymentSettings PaymentSettings) 
 	return totalSecs, totalMbytes
 }
 
-func GetPaymentConfig(api sdkplugin.PluginApi) (PaymentSettings, error) {
+func GetPaymentConfig(api sdkapi.IPluginApi) (PaymentSettings, error) {
 	var settings PaymentSettings
-	err := api.Config().Custom("default").Get(&settings)
+	// err := api.Config().Custom("default").Get(&settings)
 
-	if errors.Is(err, sdkcfg.ErrNoConfig) {
-		return DefaultPaymentSettings, nil
-	}
+	// if errors.Is(err, sdkcfg.ErrNoConfig) {
+	// 	return DefaultPaymentSettings, nil
+	// }
 
-	if err != nil {
-		return DefaultPaymentSettings, err
-	}
+	// if err != nil {
+	// 	return DefaultPaymentSettings, err
+	// }
 
 	return settings, nil
 }

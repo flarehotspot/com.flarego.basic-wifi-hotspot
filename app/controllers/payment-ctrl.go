@@ -4,42 +4,42 @@ import (
 	"log"
 	"net/http"
 
+	sdkapi "sdk/api"
+
 	"com.flarego.basic-wifi-hotspot/app/utils"
-	sdkpayments "sdk/api/payments"
-	sdkplugin "sdk/api/plugin"
 )
 
-func PurchaseWifiSession(api sdkplugin.PluginApi) http.HandlerFunc {
+func PurchaseWifiSession(api sdkapi.IPluginApi) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		p := sdkpayments.PurchaseRequest{
-			Sku:                  "wifi-connection",
-			Name:                 "WiFi Connection",
-			Description:          "Basic Wifi Hotspot",
-			AnyPrice:             true,
-			CallbackVueRouteName: "portal.purchase-callback",
+		p := sdkapi.PurchaseRequest{
+			Sku:           "wifi-connection",
+			Name:          "WiFi Connection",
+			Description:   "Basic Wifi Hotspot",
+			AnyPrice:      true,
+			CallbackRoute: "purchase:wifi:callback",
 		}
 		api.Payments().Checkout(w, r, p)
 	}
 }
 
-func PaymentRecevied(api sdkplugin.PluginApi) http.HandlerFunc {
+func PaymentRecevied(api sdkapi.IPluginApi) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		res := api.Http().VueResponse()
+		res := api.Http().HttpResponse()
 		clnt, err := api.Http().GetClientDevice(r)
 		if err != nil {
-			res.Error(w, err.Error(), 500)
+			res.Error(w, r, err, http.StatusInternalServerError)
 			return
 		}
 
 		paymentSettings, err := utils.GetPaymentConfig(api)
 		if err != nil {
-			res.Error(w, err.Error(), http.StatusUnprocessableEntity)
+			res.Error(w, r, err, http.StatusInternalServerError)
 			return
 		}
 
-		purchase, err := api.Payments().GetPendingPurchase(r)
+		purchase, err := api.Payments().GetPurchaseRequest(r)
 		if err != nil {
-			res.Error(w, err.Error(), 500)
+			res.Error(w, r, err, http.StatusInternalServerError)
 			return
 		}
 
@@ -53,7 +53,7 @@ func PaymentRecevied(api sdkplugin.PluginApi) http.HandlerFunc {
 
 		purchaseState, err := purchase.State()
 		if err != nil {
-			res.Error(w, err.Error(), http.StatusBadRequest)
+			res.Error(w, r, err, http.StatusInternalServerError)
 			return
 		}
 
@@ -61,7 +61,7 @@ func PaymentRecevied(api sdkplugin.PluginApi) http.HandlerFunc {
 			totalSecs, totalMbytes := utils.DivideIntoTimeData(float64(purchaseState.TotalPayment), paymentSettings)
 			err = api.SessionsMgr().CreateSession(r.Context(), clnt.Id(), 0, uint(totalSecs), float64(totalMbytes), nil, 10, 10, false)
 			if err != nil {
-				res.Error(w, err.Error(), 500)
+				res.Error(w, r, err, http.StatusInternalServerError)
 				return
 			}
 		} else {
@@ -71,10 +71,10 @@ func PaymentRecevied(api sdkplugin.PluginApi) http.HandlerFunc {
 
 		err = purchase.Confirm()
 		if err != nil {
-			res.Error(w, err.Error(), 500)
+			res.Error(w, r, err, http.StatusInternalServerError)
 			return
 		}
 
-		res.SendFlashMsg(w, "success", "Payment received", http.StatusOK)
+		w.Write([]byte("Success!"))
 	}
 }

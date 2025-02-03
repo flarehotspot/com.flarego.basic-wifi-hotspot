@@ -2,33 +2,36 @@ package controllers
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"sort"
 
+	sdkplugin "sdk/api"
+
 	"com.flarego.basic-wifi-hotspot/app/utils"
-	sdkplugin "sdk/api/plugin"
 )
 
-func GetPaymentSettings(api sdkplugin.PluginApi) http.HandlerFunc {
+func GetPaymentSettings(api sdkplugin.IPluginApi) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		res := api.Http().VueResponse()
+		res := api.Http().HttpResponse()
 
 		settings, err := utils.GetPaymentConfig(api)
 		if err != nil {
-			res.Error(w, err.Error(), http.StatusInternalServerError)
+			res.Error(w, r, err, http.StatusInternalServerError)
 			return
 		}
 
-		res.Json(w, settings, http.StatusOK)
+		w.Write([]byte(fmt.Sprintf("Must show payment settings: %+v\n", settings)))
 	}
 }
 
-func SavePaymentSettings(api sdkplugin.PluginApi) http.HandlerFunc {
+func SavePaymentSettings(api sdkplugin.IPluginApi) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		res := api.Http().HttpResponse()
 		var settings utils.PaymentSettings
 		err := json.NewDecoder(r.Body).Decode(&settings)
 		if err != nil {
-			api.Http().VueResponse().Error(w, err.Error(), http.StatusUnprocessableEntity)
+			res.Error(w, r, err, http.StatusInternalServerError)
 			return
 		}
 
@@ -36,14 +39,16 @@ func SavePaymentSettings(api sdkplugin.PluginApi) http.HandlerFunc {
 			return settings[i].Amount > settings[j].Amount
 		})
 
-		err = api.Config().Custom("default").Save(&settings)
-		if err != nil {
-			api.Http().VueResponse().Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
+		w.Write([]byte("must show payment settings"))
 
-		res := api.Http().VueResponse()
+		// err = api.Config().Custom("default").Save(&settings)
+		// if err != nil {
+		// 	api.Http().VueResponse().Error(w, err.Error(), http.StatusInternalServerError)
+		// 	return
+		// }
 
-		res.SendFlashMsg(w, "success", "Settings saved successfully", http.StatusOK)
+		// res := api.Http().VueResponse()
+
+		// res.SendFlashMsg(w, "success", "Settings saved successfully", http.StatusOK)
 	})
 }
