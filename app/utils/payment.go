@@ -25,7 +25,7 @@ payment settings. It iterates over the payment settings in reverse order, starti
 denomination, and deducts the amount from the payment until it can't be deducted anymore. Then, it
 accumulates the time and data accordingly.
 */
-func DivideIntoTimeData(paymentAmount float64, paymentSettings PaymentSettings) (totalSecs uint, totalMbytes uint) {
+func DivideIntoTimeData(paymentAmount float64, paymentSettings PaymentSettings) (totalSecs int, totalMbytes int) {
 	// Sort paymentSettings by amount in descending order
 	sort.Slice(paymentSettings, func(i, j int) bool {
 		return paymentSettings[i].Amount > paymentSettings[j].Amount
@@ -33,11 +33,11 @@ func DivideIntoTimeData(paymentAmount float64, paymentSettings PaymentSettings) 
 
 	for i := range paymentSettings {
 		amount := paymentSettings[i].Amount
-		minutes := uint(paymentSettings[i].TimeMins)
-		mbytes := uint(paymentSettings[i].DataMb)
+		minutes := paymentSettings[i].TimeMins
+		mbytes := paymentSettings[i].DataMb
 
 		// Calculate how many times the current amount fits into the remaining payment
-		times := uint(paymentAmount / amount)
+		times := int(paymentAmount / amount)
 
 		// Ensure the times don't exceed the available amount
 		if times > 0 && float64(times)*amount <= paymentAmount {
