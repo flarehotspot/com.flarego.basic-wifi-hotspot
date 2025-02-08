@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"encoding/json"
 	sdkapi "sdk/api"
 	"sort"
 )
@@ -55,15 +56,14 @@ func DivideIntoTimeData(paymentAmount float64, paymentSettings PaymentSettings) 
 
 func GetPaymentConfig(api sdkapi.IPluginApi) (PaymentSettings, error) {
 	var settings PaymentSettings
-	// err := api.Config().Custom("default").Get(&settings)
+	b, err := api.Config().Plugin().Read("payment_settings")
+	if err != nil {
+		return DefaultPaymentSettings, nil
+	}
 
-	// if errors.Is(err, sdkcfg.ErrNoConfig) {
-	// 	return DefaultPaymentSettings, nil
-	// }
-
-	// if err != nil {
-	// 	return DefaultPaymentSettings, err
-	// }
+	if err := json.Unmarshal(b, &settings); err != nil {
+		return DefaultPaymentSettings, nil
+	}
 
 	return settings, nil
 }

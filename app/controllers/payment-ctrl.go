@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
@@ -16,7 +17,7 @@ func PurchaseWifiSession(api sdkapi.IPluginApi) http.HandlerFunc {
 			Name:          "WiFi Connection",
 			Description:   "Basic Wifi Hotspot",
 			AnyPrice:      true,
-			CallbackRoute: "purchase:wifi:callback",
+			CallbackRoute: "purchase.wifi.callback",
 		}
 		api.Payments().Checkout(w, r, p)
 	}
@@ -59,7 +60,8 @@ func PaymentRecevied(api sdkapi.IPluginApi) http.HandlerFunc {
 
 		if purchaseState.TotalPayment > 0 {
 			totalSecs, totalMbytes := utils.DivideIntoTimeData(float64(purchaseState.TotalPayment), paymentSettings)
-			err = api.SessionsMgr().CreateSession(r.Context(), clnt.Id(), sdkapi.SessionTypeTime, int(totalSecs), float64(totalMbytes), nil, 10, 10, false)
+			fmt.Sprintf("\n*******************\nSession Total time: %d, Total data: %d\n", totalSecs, totalMbytes)
+			err = api.SessionsMgr().CreateSession(r.Context(), clnt.Id(), sdkapi.SessionTypeTime, totalSecs, float64(totalMbytes), nil, 10, 10, false)
 			if err != nil {
 				res.Error(w, r, err, http.StatusInternalServerError)
 				return
