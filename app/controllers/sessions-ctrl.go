@@ -53,7 +53,7 @@ func PauseSession(api sdkapi.IPluginApi) http.HandlerFunc {
 			return
 		}
 
-		msg := "You are now disconnected to internet."
+		msg := "You are now disconnected from internet."
 		err = api.SessionsMgr().Disconnect(r.Context(), clnt, msg)
 		if err != nil {
 			res.FlashMsg(w, r, err.Error(), sdkapi.FlashMsgError)
@@ -61,6 +61,7 @@ func PauseSession(api sdkapi.IPluginApi) http.HandlerFunc {
 			return
 		}
 
+		api.Http().HttpResponse().FlashMsg(w, r, msg, sdkapi.FlashMsgWarning)
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 	}
 }

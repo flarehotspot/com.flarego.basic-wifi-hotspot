@@ -60,7 +60,7 @@ func PaymentRecevied(api sdkapi.IPluginApi) http.HandlerFunc {
 
 		if purchaseState.TotalPayment > 0 {
 			totalSecs, totalMbytes := utils.DivideIntoTimeData(float64(purchaseState.TotalPayment), paymentSettings)
-			fmt.Sprintf("\n*******************\nSession Total time: %d, Total data: %d\n", totalSecs, totalMbytes)
+			fmt.Printf("\n*******************\nSession Total time: %d, Total data: %d\n", totalSecs, totalMbytes)
 			err = api.SessionsMgr().CreateSession(r.Context(), clnt.Id(), sdkapi.SessionTypeTime, totalSecs, float64(totalMbytes), nil, 10, 10, false)
 			if err != nil {
 				res.Error(w, r, err, http.StatusInternalServerError)
