@@ -25,14 +25,15 @@ func StartSession(api sdkapi.IPluginApi) http.HandlerFunc {
 			return
 		}
 
-		err = api.SessionsMgr().Connect(r.Context(), clnt, "You are now connected to internet.")
+		msg := "You are now connected to internet."
+		err = api.SessionsMgr().Connect(r.Context(), clnt, msg)
 		if err != nil {
 			api.Http().HttpResponse().Error(w, r, err, http.StatusInternalServerError)
 			return
 		}
 
-		api.Http().HttpResponse().FlashMsg(w, r, "Session started successfully.", sdkapi.FlashMsgSuccess)
-		http.Redirect(w, r, "http://google.com", http.StatusSeeOther)
+		res.FlashMsg(w, r, msg, sdkapi.FlashMsgSuccess)
+		res.RedirectToPortal(w, r)
 	}
 }
 
@@ -49,7 +50,7 @@ func PauseSession(api sdkapi.IPluginApi) http.HandlerFunc {
 		if !api.SessionsMgr().IsConnected(clnt) {
 			msg := "You are not connected to internet."
 			res.FlashMsg(w, r, msg, sdkapi.FlashMsgError)
-			http.Redirect(w, r, "/", http.StatusSeeOther)
+			res.RedirectToPortal(w, r)
 			return
 		}
 
@@ -57,11 +58,11 @@ func PauseSession(api sdkapi.IPluginApi) http.HandlerFunc {
 		err = api.SessionsMgr().Disconnect(r.Context(), clnt, msg)
 		if err != nil {
 			res.FlashMsg(w, r, err.Error(), sdkapi.FlashMsgError)
-			http.Redirect(w, r, "/", http.StatusSeeOther)
+			res.RedirectToPortal(w, r)
 			return
 		}
 
-		api.Http().HttpResponse().FlashMsg(w, r, msg, sdkapi.FlashMsgWarning)
-		http.Redirect(w, r, "/", http.StatusSeeOther)
+		res.FlashMsg(w, r, msg, sdkapi.FlashMsgWarning)
+		res.RedirectToPortal(w, r)
 	}
 }

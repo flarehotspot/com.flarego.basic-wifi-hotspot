@@ -10,6 +10,7 @@ func SetPortalItems(api sdkplugin.IPluginApi) {
 		navs := []sdkplugin.PortalNavItemOpt{
 			{
 				Label:     "Insert Coin",
+				IconFile:  "icons/wifi-logo.png",
 				RouteName: "purchase.wifi",
 			},
 		}
