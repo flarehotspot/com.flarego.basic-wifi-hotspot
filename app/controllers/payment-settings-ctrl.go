@@ -13,7 +13,7 @@ import (
 
 func GetPaymentSettings(api sdkplugin.IPluginApi) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		res := api.Http().HttpResponse()
+		res := api.Http().Response()
 
 		settings, err := utils.GetPaymentConfig(api)
 		if err != nil {
@@ -27,7 +27,7 @@ func GetPaymentSettings(api sdkplugin.IPluginApi) http.HandlerFunc {
 
 func SavePaymentSettings(api sdkplugin.IPluginApi) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		res := api.Http().HttpResponse()
+		res := api.Http().Response()
 		var settings utils.PaymentSettings
 		err := json.NewDecoder(r.Body).Decode(&settings)
 		if err != nil {

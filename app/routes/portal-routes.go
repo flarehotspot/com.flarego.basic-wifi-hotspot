@@ -7,7 +7,7 @@ import (
 )
 
 func PortalRoutes(api sdkapi.IPluginApi) {
-	portalRouter := api.Http().HttpRouter().PluginRouter()
+	portalRouter := api.Http().Router().PluginRouter()
 	portalRouter.Group("/purchase", func(subrouter sdkapi.IHttpRouterInstance) {
 		subrouter.Get("/wifi", controllers.PurchaseWifiSession(api)).Name("purchase.wifi")
 		subrouter.Get("/callback", controllers.PaymentRecevied(api)).Name("purchase.wifi.callback")

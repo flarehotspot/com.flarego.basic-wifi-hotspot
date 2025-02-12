@@ -25,7 +25,7 @@ func PurchaseWifiSession(api sdkapi.IPluginApi) http.HandlerFunc {
 
 func PaymentRecevied(api sdkapi.IPluginApi) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		res := api.Http().HttpResponse()
+		res := api.Http().Response()
 		clnt, err := api.Http().GetClientDevice(r)
 		if err != nil {
 			res.Error(w, r, err, http.StatusInternalServerError)
@@ -77,7 +77,7 @@ func PaymentRecevied(api sdkapi.IPluginApi) http.HandlerFunc {
 			return
 		}
 
-		api.Http().HttpResponse().FlashMsg(w, r, "Payment successful.", sdkapi.FlashMsgSuccess)
+		api.Http().Response().FlashMsg(w, r, "Payment successful.", sdkapi.FlashMsgSuccess)
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 	}
 }

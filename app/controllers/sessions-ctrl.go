@@ -10,7 +10,7 @@ import (
 func StartSession(api sdkapi.IPluginApi) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		//start
-		res := api.Http().HttpResponse()
+		res := api.Http().Response()
 
 		clnt, err := api.Http().GetClientDevice(r)
 		if err != nil {
@@ -21,14 +21,14 @@ func StartSession(api sdkapi.IPluginApi) http.HandlerFunc {
 		if api.SessionsMgr().IsConnected(clnt) {
 			msg := "You are already connected to the internet."
 			err := errors.New(msg)
-			api.Http().HttpResponse().Error(w, r, err, http.StatusInternalServerError)
+			api.Http().Response().Error(w, r, err, http.StatusInternalServerError)
 			return
 		}
 
 		msg := "You are now connected to internet."
 		err = api.SessionsMgr().Connect(r.Context(), clnt, msg)
 		if err != nil {
-			api.Http().HttpResponse().Error(w, r, err, http.StatusInternalServerError)
+			api.Http().Response().Error(w, r, err, http.StatusInternalServerError)
 			return
 		}
 
@@ -40,7 +40,7 @@ func StartSession(api sdkapi.IPluginApi) http.HandlerFunc {
 func PauseSession(api sdkapi.IPluginApi) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		//pause
-		res := api.Http().HttpResponse()
+		res := api.Http().Response()
 		clnt, err := api.Http().GetClientDevice(r)
 		if err != nil {
 			res.Error(w, r, err, http.StatusUnprocessableEntity)
