@@ -86,6 +86,11 @@ func PaymentRecevied(api sdkapi.IPluginApi) http.HandlerFunc {
 			return
 		}
 
+		if err := tx.Commit(ctx); err != nil {
+			res.Error(w, r, err, http.StatusInternalServerError)
+			return
+		}
+
 		api.Http().Response().FlashMsg(w, r, "Payment successful.", sdkapi.FlashMsgSuccess)
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 	}
