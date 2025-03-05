@@ -1,8 +1,8 @@
 package controllers
 
 import (
+	"errors"
 	"fmt"
-	"log"
 	"net/http"
 
 	sdkapi "sdk/api"
@@ -52,7 +52,14 @@ func PaymentRecevied(api sdkapi.IPluginApi) http.HandlerFunc {
 			dataPoints[i] = value.DataMb
 		}
 
-		purchaseState, err := purchase.State()
+		ctx := r.Context()
+		tx, err := api.SqlDb().Begin(r.Context())
+		if err != nil {
+			res.Error(w, r, err, http.StatusInternalServerError)
+			return
+		}
+
+		purchaseState, err := purchase.State(tx, ctx)
 		if err != nil {
 			res.Error(w, r, err, http.StatusInternalServerError)
 			return
@@ -61,17 +68,19 @@ func PaymentRecevied(api sdkapi.IPluginApi) http.HandlerFunc {
 		if purchaseState.TotalPayment > 0 {
 			totalSecs, totalMbytes := utils.DivideIntoTimeData(float64(purchaseState.TotalPayment), paymentSettings)
 			fmt.Printf("\n*******************\nSession Total time: %d, Total data: %d\n", totalSecs, totalMbytes)
-			err = api.SessionsMgr().CreateSession(r.Context(), clnt.Id(), sdkapi.SessionTypeTime, totalSecs, float64(totalMbytes), nil, 10, 10, false)
+			fmt.Println("Creating session...")
+			err = api.SessionsMgr().CreateSession(tx, r.Context(), clnt.Id(), sdkapi.SessionTypeTime, totalSecs, float64(totalMbytes), nil, 10, 10, false)
 			if err != nil {
 				res.Error(w, r, err, http.StatusInternalServerError)
 				return
 			}
 		} else {
-			log.Println("null")
+			err = errors.New("Total payment must be more than zero.")
+			res.Error(w, r, err, http.StatusInternalServerError)
 			return
 		}
 
-		err = purchase.Confirm()
+		err = purchase.Confirm(tx, ctx)
 		if err != nil {
 			res.Error(w, r, err, http.StatusInternalServerError)
 			return

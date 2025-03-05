@@ -40,15 +40,5 @@ func SavePaymentSettings(api sdkplugin.IPluginApi) http.HandlerFunc {
 		})
 
 		w.Write([]byte("must show payment settings"))
-
-		// err = api.Config().Custom("default").Save(&settings)
-		// if err != nil {
-		// 	api.Http().VueResponse().Error(w, err.Error(), http.StatusInternalServerError)
-		// 	return
-		// }
-
-		// res := api.Http().VueResponse()
-
-		// res.SendFlashMsg(w, "success", "Settings saved successfully", http.StatusOK)
 	})
 }
