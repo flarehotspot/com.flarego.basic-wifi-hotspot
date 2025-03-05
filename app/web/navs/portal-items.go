@@ -21,12 +21,6 @@ func SetPortalItems(api sdkplugin.IPluginApi) {
 			return navs
 		}
 
-		ctx := r.Context()
-		tx, err := api.SqlDb().Begin(ctx)
-		if err != nil {
-			return navs
-		}
-
 		_, hasRunningSession := api.SessionsMgr().CurrSession(clnt)
 		if hasRunningSession {
 			navs = append(navs, sdkplugin.PortalNavItemOpt{
@@ -34,12 +28,8 @@ func SetPortalItems(api sdkplugin.IPluginApi) {
 				RouteName: "portal.sessions.stop",
 			})
 		} else {
-
-			_, err = api.SessionsMgr().GetSession(tx, r.Context(), clnt)
+			_, err = api.SessionsMgr().GetSession(r.Context(), clnt)
 			hasSession := err == nil
-			if err := tx.Commit(r.Context()); err != nil {
-				return navs
-			}
 
 			if hasSession {
 				navs = append(navs, sdkplugin.PortalNavItemOpt{
